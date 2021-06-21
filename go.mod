@@ -4,9 +4,9 @@ go 1.16
 
 require (
 	github.com/andybalholm/brotli v1.0.3 // indirect
-	github.com/go-redis/redis/v8 v8.10.0 // indirect
+	github.com/go-redis/redis/v8 v8.10.0
 	github.com/gofiber/fiber/v2 v2.12.0
-	github.com/gofrs/uuid v4.0.0+incompatible
+	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/jackc/pgx/v4 v4.11.0
 	github.com/joho/godotenv v1.3.0
 	github.com/klauspost/compress v1.13.1 // indirect

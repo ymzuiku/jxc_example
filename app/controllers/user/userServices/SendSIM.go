@@ -3,14 +3,13 @@ package userServices
 import (
 	"context"
 	"errors"
-	"fmt"
 	"gewu_jxc/app/tools"
 	"time"
 )
 
 func SendSIM(phone string) error {
-	a, err := tools.ORM.SelectUserByPhone(context.Background(), phone)
-	fmt.Println(a, err)
+	_, err := tools.ORM.SelectUserByPhone(context.Background(), phone)
+
 	if err == nil {
 		return errors.New("手机号已注册，请使用该手机号登录")
 	}
