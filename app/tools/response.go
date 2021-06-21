@@ -1,8 +1,8 @@
 package tools
 
 type ResponseOk struct {
-	Code int         `json:"id"`
-	Data interface{} `json:"code"`
+	Code int         `json:"code"`
+	Data interface{} `json:"data"`
 	Msg  string      `json:"msg"`
 }
 
