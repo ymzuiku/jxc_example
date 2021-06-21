@@ -81,18 +81,6 @@ upMigrate=999 onlyMigrate=1 go run main.go
 upMigrate=999 air
 ```
 
-创建一个迁移文件
-
-```bash
-sql-migrate new file-name
-```
-
-跳过当前所有迁移文件
-
-```bash
-sql-migrate skip
-```
-
 ## sqlc 
 
 使用 sqlc 代替 orm 和 DAO 层，代码更简洁，并且利用 migrate 的文件内容生成 model，减少了重复工作
@@ -133,4 +121,18 @@ production:
     dialect: postgres
     datasource: host=localhost port=5432 user=postgres password=123456 dbname=dev_fish sslmode=disable TimeZone=Asia/Shanghai
     dir: sql/migrations
+```
+
+### 配置完可以执行 sql-migrate cli 命令：
+
+创建一个迁移文件
+
+```bash
+sql-migrate new file-name
+```
+
+跳过当前所有迁移文件
+
+```bash
+sql-migrate skip
 ```
