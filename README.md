@@ -45,15 +45,6 @@ redisAddr="127.0.0.1:6379"
 redisPassword="123456"
 redisDB=0
 ```
-
-## 配置dbconfig.yml(可选)
-
-若需要在本地执行 sql-migrate,可以配置 dbconfig.yml, gitignore 已忽略 dbconfig.yml
-
-```bash
-dbconfig.yml
-```
-
 ## controllers
 
 利用 fiber 进行路由管理和接口参数验证
@@ -124,3 +115,22 @@ sqlc generate
 每次提交之后，只需要确保当前的业务最终通过可前端的所有自动化测试即可。
 
 所以后端仅需要编写部分组件的单元测试
+
+
+## 配置dbconfig.yml(可选)
+
+若需使用 cli 执行 sql-migrate,可以配置 dbconfig.yml, gitignore 已忽略 dbconfig.yml
+
+以下是一个 dbconfig.yml 配置的例子
+
+```yml
+development:
+    dialect: postgres
+    datasource: host=localhost port=5432 user=postgres password=qwe123jkl dbname=dev_dog sslmode=disable TimeZone=Asia/Shanghai
+    dir: sql/migrations
+
+production:
+    dialect: postgres
+    datasource: host=localhost port=5432 user=postgres password=qwe123jkl dbname=dev_fish sslmode=disable TimeZone=Asia/Shanghai
+    dir: sql/migrations
+```
