@@ -7,5 +7,8 @@ type ResponseOk struct {
 }
 
 func Ok(data interface{}, msg ...string) ResponseOk {
-	return ResponseOk{Code: 200, Data: data, Msg: msg[0]}
+	if len(msg) > 0 {
+		return ResponseOk{Code: 200, Data: data, Msg: msg[0]}
+	}
+	return ResponseOk{Code: 200, Data: data, Msg: ""}
 }

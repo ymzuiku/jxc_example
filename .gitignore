@@ -15,6 +15,7 @@
 *.out
 
 .gitbk
+*gitbk
 
 dbconfig.yml
 main
