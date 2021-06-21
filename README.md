@@ -126,11 +126,11 @@ sqlc generate
 ```yml
 development:
     dialect: postgres
-    datasource: host=localhost port=5432 user=postgres password=qwe123jkl dbname=dev_dog sslmode=disable TimeZone=Asia/Shanghai
+    datasource: host=localhost port=5432 user=postgres password=123456 dbname=dev_dog sslmode=disable TimeZone=Asia/Shanghai
     dir: sql/migrations
 
 production:
     dialect: postgres
-    datasource: host=localhost port=5432 user=postgres password=qwe123jkl dbname=dev_fish sslmode=disable TimeZone=Asia/Shanghai
+    datasource: host=localhost port=5432 user=postgres password=123456 dbname=dev_fish sslmode=disable TimeZone=Asia/Shanghai
     dir: sql/migrations
 ```
