@@ -3,6 +3,9 @@ package app
 import (
 	"gewu_jxc/app/controllers"
 	"gewu_jxc/app/tools"
+	"log"
+
+	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
 func Run() {
@@ -11,5 +14,8 @@ func Run() {
 	tools.RedisInit()
 	tools.Migration(tools.Pg, "sql/migrations")
 
-	controllers.Run(":3100")
+	tools.Fiber.Use(recover.New())
+	tools.UseLogs()
+	controllers.Init()
+	log.Fatal(tools.Fiber.Listen(":3100"))
 }
