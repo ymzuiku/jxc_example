@@ -5,5 +5,5 @@ import (
 )
 
 func Init() {
-	user.UserInit()
+	user.Init()
 }
