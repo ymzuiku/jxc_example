@@ -13,6 +13,7 @@
           |- user.go
   |- tools  // 所有相关工具
   |- app.go  // 程序具体实例入口
+-- logs  // 日志文件
 -- sql  // sql相关
   |- db  // DAO层，自动生成代码，无修改
   |- migrations  // 数据库迁移代码

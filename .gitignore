@@ -17,6 +17,7 @@
 .gitbk
 *gitbk
 
+logs
 dbconfig.yml
 main
 gewu_jxc
