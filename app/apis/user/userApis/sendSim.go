@@ -11,7 +11,7 @@ type _RegisterBody struct {
 	Phone string `json:"phone" validate:"required,min=3,max=32"`
 }
 
-func SendSIM(c *fiber.Ctx) error {
+func SendSim(c *fiber.Ctx) error {
 	var body _RegisterBody
 
 	err := c.BodyParser(&body)
@@ -19,7 +19,7 @@ func SendSIM(c *fiber.Ctx) error {
 		return err
 	}
 
-	err = userServices.SendSIM(body.Phone)
+	err = userServices.SendSim(body.Phone)
 
 	if err != nil {
 		return err

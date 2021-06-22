@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func SendSIM(phone string) error {
+func SendSim(phone string) error {
 	_, err := tools.ORM.SelectUserByPhone(context.Background(), phone)
 
 	if err == nil {

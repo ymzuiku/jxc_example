@@ -7,13 +7,25 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/csrf"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/utils"
 )
 
 var Fiber = fiber.New()
 
+func UseBaseFiber() {
+	Fiber.Use(csrf.New(csrf.Config{
+		KeyLookup:      "header:X-Csrf-Token",
+		CookieName:     "csrf_",
+		CookieSameSite: "Strict",
+		Expiration:     1 * time.Hour,
+		KeyGenerator:   utils.UUID,
+	}))
+}
+
 func UseLogs() {
-	format := "[${time}] ${status} - ${latency} ${method} ${path} ${resBody}\n"
+	format := "[${time}] ${status} - ${latency} ${method} ${path}\n${query}${body}${form:}:\n${resBody}\n"
 
 	if Env.IsDev {
 		Fiber.Use(logger.New(logger.Config{
