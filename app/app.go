@@ -1,7 +1,7 @@
 package app
 
 import (
-	"gewu_jxc/app/controllers"
+	"gewu_jxc/app/apis"
 	"gewu_jxc/app/tools"
 	"log"
 
@@ -16,6 +16,6 @@ func Run() {
 
 	tools.Fiber.Use(recover.New())
 	tools.UseLogs()
-	controllers.Init()
+	apis.Init()
 	log.Fatal(tools.Fiber.Listen(":3100"))
 }

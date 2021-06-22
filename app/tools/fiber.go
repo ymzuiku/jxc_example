@@ -15,7 +15,7 @@ var Fiber = fiber.New()
 func UseLogs() {
 	format := "[${time}] ${status} - ${latency} ${method} ${path} ${resBody}\n"
 
-	if !Env.IsDev {
+	if Env.IsDev {
 		Fiber.Use(logger.New(logger.Config{
 			Format: format,
 		}))
