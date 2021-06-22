@@ -7,19 +7,19 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type _RegisterBody struct {
+type _SignInSendSimBody struct {
 	Phone string `json:"phone" validate:"required,min=3,max=32"`
 }
 
-func SendSim(c *fiber.Ctx) error {
-	var body _RegisterBody
+func SignInSendSim(c *fiber.Ctx) error {
+	var body _SignInSendSimBody
 
 	err := c.BodyParser(&body)
 	if err != nil {
 		return err
 	}
 
-	err = userServices.SendSim(body.Phone)
+	err = userServices.RegiestSendSim(body.Phone)
 
 	if err != nil {
 		return err

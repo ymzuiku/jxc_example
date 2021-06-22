@@ -25,7 +25,7 @@ func UseBaseFiber() {
 }
 
 func UseLogs() {
-	format := "[${time}] ${status} - ${latency} ${method} ${path}\n${query}${body}${form:}:\n${resBody}\n"
+	format := "[${time}] ${status} - ${latency} ${method} ${path}\n  + ${query}${body}${form:}\n  - ${resBody}\n\n"
 
 	if Env.IsDev {
 		Fiber.Use(logger.New(logger.Config{

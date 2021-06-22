@@ -8,6 +8,7 @@ import (
 func Init() {
 	// user
 	tools.Fiber.Post("/v1/user/checkSim", userApis.CheckSimCode)
-	tools.Fiber.Post("/v1/user/sendSim", userApis.SendSim)
-	tools.Fiber.Get("/v0/user/delete", userApis.Delete)
+	tools.Fiber.Post("/v1/user/regiestSendSim", userApis.RegiestSendSim)
+	tools.Fiber.Post("/v1/user/signInSendSim", userApis.RegiestSendSim)
+	tools.Fiber.Get("/v0/user/delete", userApis.DeleteApi)
 }
