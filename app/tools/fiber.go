@@ -9,12 +9,15 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/csrf"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/utils"
 )
 
 var Fiber = fiber.New()
 
-func UseBaseFiber() {
+func FiberInit() {
+	Fiber.Use(recover.New())
+
 	Fiber.Use(csrf.New(csrf.Config{
 		KeyLookup:      "header:X-Csrf-Token",
 		CookieName:     "csrf_",
@@ -22,9 +25,11 @@ func UseBaseFiber() {
 		Expiration:     1 * time.Hour,
 		KeyGenerator:   utils.UUID,
 	}))
+
+	useLogs()
 }
 
-func UseLogs() {
+func useLogs() {
 	format := "[${time}] ${status} - ${latency} ${method} ${path}\n  + ${query}${body}${form:}\n  - ${resBody}\n\n"
 
 	if Env.IsDev {

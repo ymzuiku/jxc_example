@@ -4,18 +4,14 @@ import (
 	"gewu_jxc/app/apis"
 	"gewu_jxc/app/tools"
 	"log"
-
-	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
-func Run() {
+func Init() {
 	tools.EnvInit()
 	tools.PgInit()
 	tools.RedisInit()
 	tools.Migration(tools.Pg, "sql/migrations")
-
-	tools.Fiber.Use(recover.New())
-	tools.UseLogs()
+	tools.FiberInit()
 	apis.Init()
 	log.Fatal(tools.Fiber.Listen(":3100"))
 }

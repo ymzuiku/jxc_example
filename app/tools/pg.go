@@ -2,7 +2,7 @@ package tools
 
 import (
 	"database/sql"
-	"gewu_jxc/sql/db"
+	"gewu_jxc/gen/db"
 	"log"
 	"os"
 	"strconv"
