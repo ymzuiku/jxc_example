@@ -8,13 +8,13 @@ import (
 )
 
 func CheckSimCode(c *fiber.Ctx) error {
-	var body checkSimCodeBody
+	var body CheckSimCodeBody
 	err := c.BodyParser(&body)
 	if err != nil {
 		return err
 	}
 
-	user, err := checkSimCodeService(body.Phone, body.Code)
+	user, err := CheckSimCodeService(&body)
 
 	if err != nil {
 		return err
@@ -31,7 +31,7 @@ func RegiestSendSim(c *fiber.Ctx) error {
 		return err
 	}
 
-	err = regiestSendSimService(body.Phone)
+	err = regiestSendSimService(&body)
 
 	if err != nil {
 		return err
@@ -50,7 +50,7 @@ func Delete(c *fiber.Ctx) error {
 		return err
 	}
 
-	err = deleteServer(body.Phone)
+	err = deleteServer(&body)
 
 	if err != nil {
 		return err
@@ -60,14 +60,14 @@ func Delete(c *fiber.Ctx) error {
 }
 
 func SignInSendSim(c *fiber.Ctx) error {
-	var body signInSendSimBody
+	var body regiestSendSimBody
 
 	err := c.BodyParser(&body)
 	if err != nil {
 		return err
 	}
 
-	err = regiestSendSimService(body.Phone)
+	err = signInSendSimService(&body)
 
 	if err != nil {
 		return err
