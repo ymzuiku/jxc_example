@@ -2,7 +2,7 @@ package user
 
 import (
 	"errors"
-	"gewu_jxc/app/tools"
+	"gewu_jxc/app/kit"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -20,7 +20,7 @@ func CheckSimCode(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.JSON(tools.Ok(user))
+	return c.JSON(kit.Ok(user))
 }
 
 func RegiestSendSim(c *fiber.Ctx) error {
@@ -37,11 +37,11 @@ func RegiestSendSim(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.JSON(tools.Ok(true))
+	return c.JSON(kit.Ok(true))
 }
 
 func Delete(c *fiber.Ctx) error {
-	if !tools.Env.IsDev {
+	if !kit.Env.IsDev {
 		return errors.New("仅在测试环境才可以使用此API")
 	}
 	var body deleteBody
@@ -56,7 +56,7 @@ func Delete(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.JSON(tools.Ok(true))
+	return c.JSON(kit.Ok(true))
 }
 
 func SignInSendSim(c *fiber.Ctx) error {
@@ -73,5 +73,5 @@ func SignInSendSim(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.JSON(tools.Ok(true))
+	return c.JSON(kit.Ok(true))
 }

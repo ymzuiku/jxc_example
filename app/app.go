@@ -2,7 +2,7 @@ package app
 
 import (
 	"gewu_jxc/app/apis"
-	"gewu_jxc/app/tools"
+	"gewu_jxc/app/kit"
 	"log"
 	"math/rand"
 	"time"
@@ -10,11 +10,11 @@ import (
 
 func Init() {
 	rand.Seed(time.Now().UnixNano())
-	tools.EnvInit()
-	tools.PgInit()
-	tools.RedisInit()
-	tools.Migration(tools.Pg, "sql/migrations")
-	tools.FiberInit()
+	kit.EnvInit()
+	kit.PgInit()
+	kit.RedisInit()
+	kit.Migration(kit.Pg, "sql/migrations")
+	kit.FiberInit()
 	apis.Init()
-	log.Fatal(tools.Fiber.Listen(":3100"))
+	log.Fatal(kit.Fiber.Listen(":3100"))
 }

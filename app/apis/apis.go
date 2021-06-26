@@ -2,12 +2,12 @@ package apis
 
 import (
 	"gewu_jxc/app/apis/user"
-	"gewu_jxc/app/tools"
+	"gewu_jxc/app/kit"
 )
 
 func Init() {
-	tools.Fiber.Post("/v1/user/checkSim", user.CheckSimCode)
-	tools.Fiber.Post("/v1/user/regiestSendSim", user.RegiestSendSim)
-	tools.Fiber.Post("/v1/user/signInSendSim", user.SignInSendSim)
-	tools.Fiber.Get("/v0/user/delete", user.Delete)
+	kit.Fiber.Post("/v1/user/checkSim", user.CheckSimCode)
+	kit.Fiber.Post("/v1/user/regiestSendSim", user.RegiestSendSim)
+	kit.Fiber.Post("/v1/user/signInSendSim", user.SignInSendSim)
+	kit.Fiber.Get("/v0/user/delete", user.Delete)
 }

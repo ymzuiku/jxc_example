@@ -1,4 +1,4 @@
-package tools
+package kit
 
 type ResponseOk struct {
 	Code int         `json:"code"`
