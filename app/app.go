@@ -13,7 +13,7 @@ func Init() {
 	kit.EnvInit()
 	kit.PgInit()
 	kit.RedisInit()
-	kit.Migration(kit.Pg, "sql/migrations")
+	kit.Migration(kit.Pg, "gen/migrations")
 	kit.FiberInit()
 	apis.Init()
 	log.Fatal(kit.Fiber.Listen(":3100"))
