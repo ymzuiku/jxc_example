@@ -7,9 +7,9 @@ import (
 )
 
 type Account struct {
-	ID        int32     `json:"id"`
+	ID        int32     `gorm:"primaryKey" json:"id" validate:"required,min=3,max=32"`
 	Name      string    `json:"name"`
-	Phone     string    `json:"phone"`
+	Phone     string    `gorm:"primaryKey" json:"phone" validate:"required,min=3,max=32"`
 	Password  string    `json:"password"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdateAt  time.Time `json:"updateAt"`
@@ -18,7 +18,7 @@ type Account struct {
 type Company struct {
 	ID        int32     `json:"id"`
 	AccountID int32     `json:"accountID"`
-	Name      string    `json:"name"`
+	Name      string    `gorm:"primaryKey" json:"name" validate:"required,min=3,max=32"`
 	People    string    `json:"people"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdateAt  time.Time `json:"updateAt"`

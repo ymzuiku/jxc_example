@@ -10,8 +10,11 @@ CREATE TABLE account (
   update_at timestamptz NOT NULL DEFAULT now()
 );
 
+
 CREATE INDEX account_name_x ON account (name);
 CREATE UNIQUE INDEX account_phone_x ON account (phone);
+COMMENT ON COLUMN account.id is '@gorm:primaryKey @validate:required,min=3,max=32';
+COMMENT ON COLUMN account.phone is '@gorm:primaryKey @validate:required,min=3,max=32';
 
 -- company -------------------------------
 CREATE TABLE company (
@@ -24,6 +27,7 @@ CREATE TABLE company (
 );
 
 CREATE INDEX company_account_id_x ON company (account_id);
+COMMENT ON COLUMN company.name is '@gorm:primaryKey @validate:required,min=3,max=32';
 
 -- company -------------------------------
 CREATE TABLE employ (
