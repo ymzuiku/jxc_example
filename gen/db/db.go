@@ -22,49 +22,73 @@ func New(db DBTX) *Queries {
 func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	q := Queries{db: db}
 	var err error
-	if q.deleteUserByPhoneStmt, err = db.PrepareContext(ctx, deleteUserByPhone); err != nil {
-		return nil, fmt.Errorf("error preparing query DeleteUserByPhone: %w", err)
+	if q.deleteAccountStmt, err = db.PrepareContext(ctx, deleteAccount); err != nil {
+		return nil, fmt.Errorf("error preparing query DeleteAccount: %w", err)
 	}
-	if q.insertUserStmt, err = db.PrepareContext(ctx, insertUser); err != nil {
-		return nil, fmt.Errorf("error preparing query InsertUser: %w", err)
+	if q.deleteAccountByPhoneStmt, err = db.PrepareContext(ctx, deleteAccountByPhone); err != nil {
+		return nil, fmt.Errorf("error preparing query DeleteAccountByPhone: %w", err)
 	}
-	if q.selectUserByIdStmt, err = db.PrepareContext(ctx, selectUserById); err != nil {
-		return nil, fmt.Errorf("error preparing query SelectUserById: %w", err)
+	if q.insertAccountStmt, err = db.PrepareContext(ctx, insertAccount); err != nil {
+		return nil, fmt.Errorf("error preparing query InsertAccount: %w", err)
 	}
-	if q.selectUserByPhoneStmt, err = db.PrepareContext(ctx, selectUserByPhone); err != nil {
-		return nil, fmt.Errorf("error preparing query SelectUserByPhone: %w", err)
+	if q.insertCompanyStmt, err = db.PrepareContext(ctx, insertCompany); err != nil {
+		return nil, fmt.Errorf("error preparing query InsertCompany: %w", err)
 	}
-	if q.updateUserPasswordStmt, err = db.PrepareContext(ctx, updateUserPassword); err != nil {
-		return nil, fmt.Errorf("error preparing query UpdateUserPassword: %w", err)
+	if q.selectAccountByIdStmt, err = db.PrepareContext(ctx, selectAccountById); err != nil {
+		return nil, fmt.Errorf("error preparing query SelectAccountById: %w", err)
+	}
+	if q.selectAccountByPhoneStmt, err = db.PrepareContext(ctx, selectAccountByPhone); err != nil {
+		return nil, fmt.Errorf("error preparing query SelectAccountByPhone: %w", err)
+	}
+	if q.selectCompanyStmt, err = db.PrepareContext(ctx, selectCompany); err != nil {
+		return nil, fmt.Errorf("error preparing query SelectCompany: %w", err)
+	}
+	if q.updateAccountPasswordStmt, err = db.PrepareContext(ctx, updateAccountPassword); err != nil {
+		return nil, fmt.Errorf("error preparing query UpdateAccountPassword: %w", err)
 	}
 	return &q, nil
 }
 
 func (q *Queries) Close() error {
 	var err error
-	if q.deleteUserByPhoneStmt != nil {
-		if cerr := q.deleteUserByPhoneStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing deleteUserByPhoneStmt: %w", cerr)
+	if q.deleteAccountStmt != nil {
+		if cerr := q.deleteAccountStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing deleteAccountStmt: %w", cerr)
 		}
 	}
-	if q.insertUserStmt != nil {
-		if cerr := q.insertUserStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing insertUserStmt: %w", cerr)
+	if q.deleteAccountByPhoneStmt != nil {
+		if cerr := q.deleteAccountByPhoneStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing deleteAccountByPhoneStmt: %w", cerr)
 		}
 	}
-	if q.selectUserByIdStmt != nil {
-		if cerr := q.selectUserByIdStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing selectUserByIdStmt: %w", cerr)
+	if q.insertAccountStmt != nil {
+		if cerr := q.insertAccountStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing insertAccountStmt: %w", cerr)
 		}
 	}
-	if q.selectUserByPhoneStmt != nil {
-		if cerr := q.selectUserByPhoneStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing selectUserByPhoneStmt: %w", cerr)
+	if q.insertCompanyStmt != nil {
+		if cerr := q.insertCompanyStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing insertCompanyStmt: %w", cerr)
 		}
 	}
-	if q.updateUserPasswordStmt != nil {
-		if cerr := q.updateUserPasswordStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing updateUserPasswordStmt: %w", cerr)
+	if q.selectAccountByIdStmt != nil {
+		if cerr := q.selectAccountByIdStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing selectAccountByIdStmt: %w", cerr)
+		}
+	}
+	if q.selectAccountByPhoneStmt != nil {
+		if cerr := q.selectAccountByPhoneStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing selectAccountByPhoneStmt: %w", cerr)
+		}
+	}
+	if q.selectCompanyStmt != nil {
+		if cerr := q.selectCompanyStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing selectCompanyStmt: %w", cerr)
+		}
+	}
+	if q.updateAccountPasswordStmt != nil {
+		if cerr := q.updateAccountPasswordStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing updateAccountPasswordStmt: %w", cerr)
 		}
 	}
 	return err
@@ -104,23 +128,29 @@ func (q *Queries) queryRow(ctx context.Context, stmt *sql.Stmt, query string, ar
 }
 
 type Queries struct {
-	db                     DBTX
-	tx                     *sql.Tx
-	deleteUserByPhoneStmt  *sql.Stmt
-	insertUserStmt         *sql.Stmt
-	selectUserByIdStmt     *sql.Stmt
-	selectUserByPhoneStmt  *sql.Stmt
-	updateUserPasswordStmt *sql.Stmt
+	db                        DBTX
+	tx                        *sql.Tx
+	deleteAccountStmt         *sql.Stmt
+	deleteAccountByPhoneStmt  *sql.Stmt
+	insertAccountStmt         *sql.Stmt
+	insertCompanyStmt         *sql.Stmt
+	selectAccountByIdStmt     *sql.Stmt
+	selectAccountByPhoneStmt  *sql.Stmt
+	selectCompanyStmt         *sql.Stmt
+	updateAccountPasswordStmt *sql.Stmt
 }
 
 func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 	return &Queries{
-		db:                     tx,
-		tx:                     tx,
-		deleteUserByPhoneStmt:  q.deleteUserByPhoneStmt,
-		insertUserStmt:         q.insertUserStmt,
-		selectUserByIdStmt:     q.selectUserByIdStmt,
-		selectUserByPhoneStmt:  q.selectUserByPhoneStmt,
-		updateUserPasswordStmt: q.updateUserPasswordStmt,
+		db:                        tx,
+		tx:                        tx,
+		deleteAccountStmt:         q.deleteAccountStmt,
+		deleteAccountByPhoneStmt:  q.deleteAccountByPhoneStmt,
+		insertAccountStmt:         q.insertAccountStmt,
+		insertCompanyStmt:         q.insertCompanyStmt,
+		selectAccountByIdStmt:     q.selectAccountByIdStmt,
+		selectAccountByPhoneStmt:  q.selectAccountByPhoneStmt,
+		selectCompanyStmt:         q.selectCompanyStmt,
+		updateAccountPasswordStmt: q.updateAccountPasswordStmt,
 	}
 }

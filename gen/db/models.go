@@ -3,14 +3,33 @@
 package db
 
 import (
-	"database/sql"
+	"time"
 )
 
-type User struct {
-	ID        int64        `json:"id"`
-	Name      string       `json:"name"`
-	Phone     string       `json:"phone"`
-	Password  string       `json:"password"`
-	CreatedAt sql.NullTime `json:"createdAt"`
-	UpdateAt  sql.NullTime `json:"updateAt"`
+type Account struct {
+	ID        int32     `json:"id"`
+	Name      string    `json:"name"`
+	Phone     string    `json:"phone"`
+	Password  string    `json:"password"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdateAt  time.Time `json:"updateAt"`
+}
+
+type Company struct {
+	ID        int32     `json:"id"`
+	AccountID int32     `json:"accountID"`
+	Name      string    `json:"name"`
+	People    string    `json:"people"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdateAt  time.Time `json:"updateAt"`
+}
+
+type Employ struct {
+	ID        int32     `json:"id"`
+	AccountID int32     `json:"accountID"`
+	CompanyID int32     `json:"companyID"`
+	Name      string    `json:"name"`
+	IsBoss    string    `json:"isBoss"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdateAt  time.Time `json:"updateAt"`
 }

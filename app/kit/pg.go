@@ -12,7 +12,7 @@ import (
 )
 
 var Pg *sql.DB
-var ORM *db.Queries
+var Sql *db.Queries
 
 func PgInit() {
 	conn, err := sql.Open("pgx", os.Getenv("DB_CONNECT_URL"))
@@ -26,5 +26,5 @@ func PgInit() {
 	conn.SetMaxIdleConns(maxIdleConns)
 	conn.SetConnMaxLifetime(time.Duration(maxLifetime) * time.Minute)
 	Pg = conn
-	ORM = db.New(Pg)
+	Sql = db.New(Pg)
 }
