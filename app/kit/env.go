@@ -14,12 +14,12 @@ type TheEnv struct {
 var Env = TheEnv{}
 var loaded = false
 
-func EnvInit() {
+func EnvInit(file string) {
 	if loaded {
 		return
 	}
 	loaded = true
-	err := godotenv.Load(".env")
+	err := godotenv.Load(file)
 	if err != nil {
 		log.Fatalln(err)
 	}

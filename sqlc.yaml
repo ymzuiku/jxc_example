@@ -1,12 +1,11 @@
-# bash run: sqlc generate
+# bash run: sqlm generate
 version: "1"
 packages:
-  - name: "db"
-    path: "./gen/db"
-    queries: "./gen/query/"
-    schema: "./gen/migrations/"
+  - name: "models"
+    path: "./models"
+    schema: "./migrations/"
     engine: "postgresql"
-    emit_prepared_queries: true
+    emit_prepared_queries: false
     emit_interface: false
     emit_exact_table_names: false
     emit_empty_slices: false

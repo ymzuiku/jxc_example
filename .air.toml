@@ -3,8 +3,8 @@ tmp_dir = "tmp"
 
 [build]
 bin = "./tmp/main"
-cmd = "upMigrate=999 go build -o ./tmp/main ./cmd/jxc"
-delay = 1000
+cmd = "go build -o ./tmp/main ./cmd/jxc"
+delay = 150
 exclude_dir = ["assets", "tmp", "vendor", "gen/migrations", "gen/query", ".1-gitbk", ".2-gitbk"]
 exclude_file = ["README.md", ".gitignore"]
 exclude_regex = []

@@ -7,6 +7,7 @@ require (
 	github.com/go-redis/redis/v8 v8.10.0
 	github.com/gofiber/fiber/v2 v2.12.0
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
+	github.com/google/go-querystring v1.1.0
 	github.com/jackc/pgx/v4 v4.11.0
 	github.com/joho/godotenv v1.3.0
 	github.com/klauspost/compress v1.13.1 // indirect
@@ -14,4 +15,6 @@ require (
 	github.com/rubenv/sql-migrate v0.0.0-20210614095031-55d5740dbbcc
 	github.com/ziutek/mymysql v1.5.4 // indirect
 	golang.org/x/sys v0.0.0-20210615035016-665e8c7367d1 // indirect
+	gorm.io/driver/postgres v1.1.0
+	gorm.io/gorm v1.21.11
 )

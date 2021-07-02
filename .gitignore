@@ -1,5 +1,6 @@
 
 .env
+README_local.md
 
 # Binaries for programs and plugins
 *.exe
@@ -16,7 +17,7 @@
 
 .gitbk
 *gitbk
-
+**/.env-test
 logs
 dbconfig.yml
 main

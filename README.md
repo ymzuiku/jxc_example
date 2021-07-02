@@ -4,27 +4,20 @@
 
 ## 目录说明
 
-```js
---app | // 程序源码文件夹
-  -controllers | // 路由
-  -user | //每个业务一个文件
-  -userControllers | // 该业务的路由，做参数解析、约束，调用 servers
-  -userServices | // 该业务的业务逻辑，调用 DAO 层，业务逻辑处理
-  -user.go |
-  -tools | // 所有相关工具
-  -app.go; // 程序具体实例入口
---logs; // 日志文件
---gen | // 用于创建和存储生成累的代码
-  -db | // DAO层，自动生成代码，无修改
-  -migrations | // 数据库迁移代码
-  -query; // 数据库操作方法，每个表一个文件
-main.go.air.toml.env; // 仅仅执行 app.go // air 开发环境热更新配置 // 环境参数配置（gitignore忽略）
-database.json; // sql-migrate 基本配置
-dbconfig.yml; // sql-migrate cli 配置（gitignore忽略）
-go.mod;
-go.sum;
-README.md;
-sqlc.yaml; // sqlc 配置
+```text
+app // 程序源码文件夹
+cmd // 项目执行文件
+logs // 日志文件
+models // 数据库表结构文件，自动生成
+migrations // 数据库迁移代码
+.air.toml // air 开发环境热更新配置
+.env  // 环境参数配置（gitignore忽略）
+database.json // sql-migrate 基本配置
+dbconfig.yml // sql-migrate cli 配置（gitignore忽略）
+go.mod
+go.sum
+README.md
+sqlc.yaml // sqlc/sqlm 配置
 ```
 
 ## 配置 .env (必须)
@@ -39,6 +32,7 @@ DB_CONNECT_URL="host=localhost port=5432 user=postgres password=123456 dbname=de
 maxOpenConns=20
 maxIdleConns=20
 maxLifetime=5
+migrations="migrations"
 redisAddr="127.0.0.1:6379"
 redisPassword="123456"
 redisDB=0
@@ -54,7 +48,7 @@ redisDB=0
 
 ## 启动服务/迁移数据库
 
-migrate 会读取 `sql/migrations` 进行迁移
+migrate 会读取 `migrations` 进行迁移
 
 启动并执行迁移，999 次
 
@@ -80,18 +74,15 @@ upMigrate=999 onlyMigrate=1 go run main.go
 upMigrate=999 air
 ```
 
-## sqlc
+## sqlm
 
-使用 sqlc 代替 orm 和 DAO 层，代码更简洁，并且利用 migrate 的文件内容生成 model，减少了重复工作使用 sqlc 的另一个好处是相对于 gorm 它的性能更高（节省了 orm 反射的开销），其次是每一个 sql 都是手工编写的，更容易调优。
+使用 sqlm 编译 表结构模型, sqlm 的安装和使用查看：https://github.com/ymzuiku/sqlc/tree/main-ex, sqlm 会读取 migrations 的历史生成 model，并且会忽略 migrate-down 的代码块
 
 执行命令：
 
 ```bash
-sqlc generate
+sqlm generate
 ```
-
-1. sqlc 会读取 sql/migrations 的历史生成 model，并且会忽略 migrate-down 的代码块
-2. sqlc 会读取 sql/query 生成 数据操作（DAO）和 Models
 
 ## 关于测试
 
@@ -100,6 +91,14 @@ sqlc generate
 每次提交之后，只需要确保当前的业务最终通过可前端的所有自动化测试即可。
 
 所以后端仅需要编写部分组件的单元测试
+
+### 单元测试
+
+单元测试，安装 golang 的建议，直接写在业务代码中，具体参考 `kit/randomCode_test.go`
+
+```bash
+go test ./app/... -cover
+```
 
 ## 配置 dbconfig.yml(可选)
 
@@ -111,12 +110,12 @@ sqlc generate
 development:
   dialect: postgres
   datasource: host=localhost port=5432 user=postgres password=123456 dbname=dev_dog sslmode=disable TimeZone=Asia/Shanghai
-  dir: sql/migrations
+  dir: migrations
 
 production:
   dialect: postgres
   datasource: host=localhost port=5432 user=postgres password=123456 dbname=dev_fish sslmode=disable TimeZone=Asia/Shanghai
-  dir: sql/migrations
+  dir: migrations
 ```
 
 ### 配置完可以执行 sql-migrate cli 命令：
@@ -131,4 +130,16 @@ sql-migrate new file-name
 
 ```bash
 sql-migrate skip
+```
+
+迁移所有
+
+```bash
+sql-migrate up
+```
+
+回滚所有
+
+```bash
+sql-migrate down -limit=999
 ```

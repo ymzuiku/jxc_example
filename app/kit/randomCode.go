@@ -1,7 +1,6 @@
 package kit
 
 import (
-	"fmt"
 	"math"
 	"math/rand"
 	"strconv"
@@ -11,7 +10,6 @@ import (
 func RandomCode(digits int) string {
 	min := int(math.Pow(10, float64(digits))) - 1
 	max := min*10 + 9
-	fmt.Println(min, max)
 	if Env.IsDev {
 		return "999999"
 	}

@@ -10,7 +10,11 @@ import (
 	migrate "github.com/rubenv/sql-migrate"
 )
 
-func Migration(db *sql.DB, dir string) {
+func Migration(db *sql.DB) {
+	var dir = os.Getenv("migrations")
+	if dir == "" {
+		panic(".env migrations is empty")
+	}
 	var isNeedMigrate = false
 	var direction migrate.MigrationDirection
 	var space int
@@ -19,7 +23,7 @@ func Migration(db *sql.DB, dir string) {
 	if os.Getenv("onlyMigrate") != "" {
 		onlyMigrate = true
 	}
-	var config = func(key string) {
+	var fixConfig = func(key string) {
 		if isNeedMigrate {
 			return
 		}
@@ -45,10 +49,11 @@ func Migration(db *sql.DB, dir string) {
 		}
 	}
 
-	config("upMigrate")
-	config("downMigrate")
+	fixConfig("upMigrate")
+	fixConfig("downMigrate")
 
 	if !isNeedMigrate {
+		fmt.Println("No need migrate.")
 		return
 	}
 
