@@ -10,7 +10,7 @@ import (
 
 func Init() {
 	rand.Seed(time.Now().UnixNano())
-	kit.EnvInit(".env")
+	kit.EnvInit()
 	kit.PgInit()
 	kit.RedisInit()
 	kit.Migration(kit.Db)

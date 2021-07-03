@@ -16,7 +16,7 @@ func signUpSendCode(body *sendCodeBody) error {
 	}
 
 	code := kit.RandomCode(6)
-	kit.Redis.SetEX(context.Background(), "regiest-phone:"+body.Phone, code, time.Minute*10)
+	kit.Redis.SetEX(context.Background(), "signUp-phone:"+body.Phone, code, time.Minute*10)
 
 	return nil
 }

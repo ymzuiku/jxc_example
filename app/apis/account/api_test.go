@@ -6,16 +6,15 @@ import (
 	"testing"
 )
 
+var phone = "13200000004"
+
 func TestSignUp(t *testing.T) {
-	kit.EnvInit(".env-test")
-	kit.PgInit()
-	kit.RedisInit()
-	phone := "13200000000"
+	kit.InitTest()
 
 	t.Run("delete account no found", func(t *testing.T) {
-		err := delete(&deleteBody{Phone: "13200000009"})
+		err := remove(&removeBody{Phone: "13200000009"})
 		if err == nil {
-			t.Error("不存在的手机号，未返回正确错误信息")
+			t.Errorf("不存在的手机号，未返回正确错误信息: %v", err)
 		}
 	})
 
@@ -33,16 +32,16 @@ func TestSignUp(t *testing.T) {
 			fmt.Printf("假意注册错误，可忽略: %s\n", ignoreErr.Error())
 		}
 
-		err := delete(&deleteBody{Phone: phone})
-		if err == nil {
-			t.Error("存在的手机号，未返回正确错误信息")
+		err := remove(&removeBody{Phone: phone})
+		if err != nil {
+			t.Errorf("存在的手机号，未返回正确错误信息: %v", err)
 		}
 	})
 
 	t.Run("signUp sendcode", func(t *testing.T) {
 		err := signUpSendCode(&sendCodeBody{Phone: phone})
 		if err != nil {
-			t.Error(err.Error())
+			t.Error(err)
 		}
 	})
 
@@ -56,7 +55,34 @@ func TestSignUp(t *testing.T) {
 			Password: "123456",
 		})
 		if err != nil {
-			t.Error(err.Error())
+			t.Error(err)
+		}
+	})
+
+}
+
+func TestSignIn(t *testing.T) {
+	t.Run("signIn empty with code", func(t *testing.T) {
+		err := signInSendCode(&sendCodeBody{Phone: phone})
+		if err != nil {
+			t.Error(err)
+		}
+		_, err = signInWithCode(&signInWithCodeBody{
+			Phone: "19000000000",
+			Code:  "999999",
+		})
+		if err == nil {
+			t.Error("空账号验证码登录没抛错误")
+		}
+	})
+
+	t.Run("signIn empty with password", func(t *testing.T) {
+		_, err := signInWithPassword(&signInWithPasswordBody{
+			Phone:    "19000000000",
+			Password: "123123123",
+		})
+		if err == nil {
+			t.Error("空账号密码登录没抛错误")
 		}
 	})
 

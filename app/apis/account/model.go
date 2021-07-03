@@ -23,6 +23,6 @@ type sendCodeBody struct {
 	Phone string `json:"phone" validate:"required,min=3,max=32"`
 }
 
-type deleteBody struct {
+type removeBody struct {
 	Phone string `json:"phone" validate:"required,min=6,max=32"`
 }

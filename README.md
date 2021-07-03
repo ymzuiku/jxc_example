@@ -2,6 +2,38 @@
 
 格物进销存服务端
 
+## 常用命令
+
+给 script.sh 添加权限
+
+```bash
+sudo chmod -R 777 script.sh
+```
+
+编译 linux
+
+```
+./script.sh linux
+```
+
+本地执行
+
+```
+./script.sh dev
+```
+
+单元测试
+
+```
+./script.sh test
+```
+
+单元测试并且显示测试覆盖率
+
+```
+./script.sh test
+```
+
 ## 目录说明
 
 ```text
@@ -96,8 +128,21 @@ sqlm generate
 
 单元测试，安装 golang 的建议，直接写在业务代码中，具体参考 `kit/randomCode_test.go`
 
+- -count=1 忽略测试缓存，有副作用的测试，如查询数据库，需要忽略测试缓存
+- -cover 查看测试覆盖率
+- -tags test 忽略文件首行包含 `//+build !test` 的文件进行覆盖测试,记得文件第二行需要换行
+- -coverprofile=t.out 导出测试描述
+
+测试并计算覆盖率
+
 ```bash
-go test ./app/... -cover
+go test ./app/... -count=1 -cover -tags test -coverprofile=t.out
+```
+
+显示具体测试覆盖率 html
+
+```
+go tool cover -html=t.out
 ```
 
 ## 配置 dbconfig.yml(可选)

@@ -14,7 +14,7 @@ func Init() {
 	kit.Fiber.Post("/v1/account/signin/password", account.SignInWithPasswordApi)
 
 	if kit.Env.IsDev {
-		kit.Fiber.Get("/v0/account/delete", account.DeleteApi)
+		kit.Fiber.Get("/v0/account/remove", account.RemoveApi)
 	}
 
 }

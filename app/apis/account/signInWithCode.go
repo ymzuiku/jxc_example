@@ -8,7 +8,7 @@ import (
 )
 
 func signInWithCode(body *signInWithCodeBody) (models.Account, error) {
-	realCode := kit.Redis.Get(context.Background(), "regiest-phone:"+body.Phone).Val()
+	realCode := kit.Redis.Get(context.Background(), "signIn-phone:"+body.Phone).Val()
 	if realCode != body.Code {
 		return models.Account{}, errors.New("您输入的账号或验证码不正确")
 	}

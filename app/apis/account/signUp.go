@@ -11,23 +11,22 @@ import (
 )
 
 func signUp(body *signUpBody) (models.Account, error) {
-	realCode := kit.Redis.Get(context.Background(), "regiest-phone:"+body.Phone).Val()
+	realCode := kit.Redis.Get(context.Background(), "signUp-phone:"+body.Phone).Val()
 	if realCode != body.Code {
 		return models.Account{}, errors.New("您输入的验证码不正确")
+	}
+
+	// 读取管理员角色
+	manager := models.Actor{}
+	err := kit.ORM.Where("name = ?", "Manager").Take(&manager).Error
+	if err != nil {
+		return models.Account{}, err
 	}
 
 	tx := kit.ORM.Session(&gorm.Session{SkipDefaultTransaction: true})
 	defer tx.Commit()
 
-	// manager, err := kit.Sql.SelectActorByName(ctx, "Manager")
-	manager := models.Actor{}
-	err := tx.Where("name = ?", "Manager").Take(&manager).Error
-
-	if err != nil {
-		tx.Rollback()
-		return models.Account{}, err
-	}
-
+	// 创建账号
 	account := models.Account{
 		Name:     body.Name,
 		Phone:    body.Phone,
@@ -41,6 +40,7 @@ func signUp(body *signUpBody) (models.Account, error) {
 		return models.Account{}, res.Error
 	}
 
+	// 创建企业
 	company := models.Company{
 		Name:        body.Company,
 		AccountID:   account.ID,
@@ -48,27 +48,29 @@ func signUp(body *signUpBody) (models.Account, error) {
 		Model:       models.CompanyModelFree,
 		DeployModel: models.CompanyDeployModelSaas,
 	}
-	err = tx.Omit("name, account_id, people").Create(&company).Error
+	err = tx.Create(&company).Error
 	if err != nil {
 		tx.Rollback()
 		return models.Account{}, err
 	}
 
+	// 创建员工
 	employ := models.Employ{
 		AccountID: account.ID,
 		CompanyID: company.ID,
 	}
-	err = tx.Omit("account_id, company_id").Create(&employ).Error
+	err = tx.Create(&employ).Error
 	if err != nil {
 		tx.Rollback()
 		return models.Account{}, err
 	}
 
+	// 创建角色权限映射
 	employActor := models.EmployActor{
 		EmployID: employ.ID,
 		ActorID:  manager.ID,
 	}
-	err = tx.Omit("employ_id, actor_id").Create(&employActor).Error
+	err = tx.Create(&employActor).Error
 
 	if err != nil {
 		tx.Rollback()

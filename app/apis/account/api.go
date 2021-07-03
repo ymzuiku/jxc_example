@@ -1,3 +1,5 @@
+//+build !test
+
 package account
 
 import (
@@ -94,14 +96,14 @@ func SignInWithPasswordApi(c *fiber.Ctx) error {
 	return c.JSON(kit.Ok(account))
 }
 
-func DeleteApi(c *fiber.Ctx) error {
-	var body deleteBody
+func RemoveApi(c *fiber.Ctx) error {
+	var body removeBody
 	err := c.QueryParser(&body)
 	if err != nil {
 		return err
 	}
 
-	err = delete(&body)
+	err = remove(&body)
 
 	if err != nil {
 		return err

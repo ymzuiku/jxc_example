@@ -5,16 +5,37 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path"
 	"strconv"
 
 	migrate "github.com/rubenv/sql-migrate"
 )
 
-func Migration(db *sql.DB) {
+func loadMigrationsDir() *migrate.FileMigrationSource {
 	var dir = os.Getenv("migrations")
 	if dir == "" {
 		panic(".env migrations is empty")
 	}
+
+	migrations := &migrate.FileMigrationSource{
+		Dir: path.Join(EnvDir, dir),
+	}
+	return migrations
+}
+
+func RunMigration(db *sql.DB, direciton migrate.MigrationDirection) {
+	dir := loadMigrationsDir()
+
+	n, err := migrate.ExecMax(db, "postgres", dir, direciton, 9999)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	fmt.Printf("Applied %d migrations!\n", n)
+}
+
+func Migration(db *sql.DB) {
+	dir := loadMigrationsDir()
+
 	var isNeedMigrate = false
 	var direction migrate.MigrationDirection
 	var space int
@@ -57,11 +78,7 @@ func Migration(db *sql.DB) {
 		return
 	}
 
-	migrations := &migrate.FileMigrationSource{
-		Dir: dir,
-	}
-
-	n, err := migrate.ExecMax(db, "postgres", migrations, direction, space)
+	n, err := migrate.ExecMax(db, "postgres", dir, direction, space)
 	if err != nil {
 		log.Fatalln(err)
 	}
