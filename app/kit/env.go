@@ -11,11 +11,11 @@ import (
 
 type TheEnv struct {
 	IsDev bool
+	Dir   string
 }
 
-var Env = TheEnv{}
+var Env = &TheEnv{}
 var loaded = false
-var EnvDir = ""
 
 func loadDotEnvFile(twd string) string {
 	str := path.Join(twd, ".env")
@@ -23,7 +23,7 @@ func loadDotEnvFile(twd string) string {
 		fmt.Println(path.Join(twd, ".."))
 		return loadDotEnvFile(path.Join(twd, ".."))
 	}
-	EnvDir = path.Dir(str)
+	Env.Dir = path.Dir(str)
 	return str
 }
 
@@ -43,7 +43,5 @@ func EnvInit() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	Env = TheEnv{
-		IsDev: os.Getenv("DEV") != "",
-	}
+	Env.IsDev = os.Getenv("DEV") != ""
 }

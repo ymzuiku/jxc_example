@@ -1,52 +1,51 @@
 package account
 
 import (
-	"errors"
 	"fmt"
 	"gewu_jxc/app/kit"
 	"gewu_jxc/models"
-
-	"gorm.io/gorm"
 )
 
 func remove(body *removeBody) error {
-	tx := kit.ORM.Session(&gorm.Session{})
-	defer tx.Commit()
-
-	account := models.Account{}
-	err := tx.Where("phone = ?", body.Phone).Take(&account).Error
-	if err != nil {
-		tx.Rollback()
-		return errors.New("不存在该手机号用户")
+	var account models.Account
+	res := kit.ORM.Where("phone = ?", body.Phone).Take(&account)
+	if res.RowsAffected != 1 {
+		return fmt.Errorf("不存在该手机号用户")
 	}
 
-	var company models.Company
-	tx.Where("account_id = ?", &account.ID).Delete(&company)
-	if company.ID == 0 {
+	tx := kit.ORM.Begin()
+
+	res = tx.Table("company").Where("account_id = ?", &account.ID).Delete(nil)
+	if res.RowsAffected != 1 {
 		tx.Rollback()
-		return fmt.Errorf("delete company not found")
+		return fmt.Errorf("delete company err: %+v", res.Error)
 	}
 
-	employ := models.Employ{}
-
-	tx.Where("account_id = ?", &account.ID).Delete(&employ)
-	if employ.ID == 0 {
+	var employ models.Employ
+	res = tx.Where("account_id = ?", &account.ID).Take(&employ)
+	if res.RowsAffected != 1 {
 		tx.Rollback()
-		return fmt.Errorf("delete company not found")
+		return fmt.Errorf("find employ err: %+v", res.Error)
+	}
+	res = tx.Table("employ").Where("account_id = ?", &account.ID).Delete(nil)
+	if res.RowsAffected != 1 {
+		tx.Rollback()
+		return fmt.Errorf("delete employ err: %+v", res.Error)
 	}
 
-	var employActor models.EmployActor
-	tx.Where("employ_id = ?", &employ.ID).Delete(&employActor)
-	if employActor.ID == 0 {
+	res = tx.Table("employ_actor").Where("employ_id = ?", &employ.ID).Delete(nil)
+	if res.RowsAffected != 1 {
 		tx.Rollback()
-		return fmt.Errorf("delete employActor not found")
+		return fmt.Errorf("delete employ_actor err: %+v", res.Error)
 	}
 
-	err = tx.Where("id = ?", &account.ID).Delete(&account).Error
-	if err != nil {
+	res = tx.Table("account").Where("id = ?", &account.ID).Delete(nil)
+	if res.RowsAffected != 1 {
 		tx.Rollback()
-		return fmt.Errorf("delete account: %v", err)
+		return fmt.Errorf("delete account err: %+v", res.Error)
 	}
+
+	tx.Commit()
 
 	return nil
 }

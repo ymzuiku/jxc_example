@@ -25,7 +25,7 @@ func gormLog() logger.Interface {
 		SlowThreshold:             time.Second,   // 慢 SQL 阈值
 		LogLevel:                  logger.Silent, // 日志级别
 		IgnoreRecordNotFoundError: true,          // 忽略记录器的 ErrRecordNotFound 错误
-		Colorful:                  true,          // 禁用颜色
+		Colorful:                  false,         // 颜色
 	}
 
 	if isDev {
@@ -33,7 +33,7 @@ func gormLog() logger.Interface {
 			SlowThreshold:             time.Millisecond * 200, // 慢 SQL 阈值
 			LogLevel:                  logger.Info,            // 日志级别
 			IgnoreRecordNotFoundError: false,                  // 忽略记录器的 ErrRecordNotFound 错误
-			Colorful:                  false,                  // 禁用颜色
+			Colorful:                  true,                   // 颜色
 		}
 	}
 

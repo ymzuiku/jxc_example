@@ -3,11 +3,10 @@ package account
 import (
 	"context"
 	"errors"
+	"fmt"
 	"gewu_jxc/app/kit"
 	"gewu_jxc/models"
 	"time"
-
-	"gorm.io/gorm"
 )
 
 func signUp(body *signUpBody) (models.Account, error) {
@@ -18,13 +17,12 @@ func signUp(body *signUpBody) (models.Account, error) {
 
 	// 读取管理员角色
 	manager := models.Actor{}
-	err := kit.ORM.Where("name = ?", "Manager").Take(&manager).Error
-	if err != nil {
-		return models.Account{}, err
+	res := kit.ORM.Where("name = ?", "Manager").Take(&manager)
+	if res.RowsAffected != 1 {
+		return models.Account{}, res.Error
 	}
 
-	tx := kit.ORM.Session(&gorm.Session{SkipDefaultTransaction: true})
-	defer tx.Commit()
+	tx := kit.ORM.Begin()
 
 	// 创建账号
 	account := models.Account{
@@ -34,11 +32,12 @@ func signUp(body *signUpBody) (models.Account, error) {
 		UpdateAt: time.Now(),
 	}
 
-	res := tx.Create(&account)
+	res = tx.Create(&account)
 	if res.RowsAffected != 1 {
 		tx.Rollback()
-		return models.Account{}, res.Error
+		return models.Account{}, fmt.Errorf("create acount err: %+v", res.Error)
 	}
+	fmt.Printf("aaaaaaaaaaaaaaaaaaaaaaaaaaa %+v \n", account)
 
 	// 创建企业
 	company := models.Company{
@@ -51,7 +50,7 @@ func signUp(body *signUpBody) (models.Account, error) {
 	res = tx.Create(&company)
 	if res.RowsAffected != 1 {
 		tx.Rollback()
-		return models.Account{}, res.Error
+		return models.Account{}, fmt.Errorf("create company err: %+v", res.Error)
 	}
 
 	// 创建员工
@@ -59,10 +58,10 @@ func signUp(body *signUpBody) (models.Account, error) {
 		AccountID: account.ID,
 		CompanyID: company.ID,
 	}
-	err = tx.Create(&employ).Error
-	if err != nil {
+	res = tx.Create(&employ)
+	if res.RowsAffected != 1 {
 		tx.Rollback()
-		return models.Account{}, err
+		return models.Account{}, fmt.Errorf("create employ err: %+v", res.Error)
 	}
 
 	// 创建角色权限映射
@@ -70,12 +69,14 @@ func signUp(body *signUpBody) (models.Account, error) {
 		EmployID: employ.ID,
 		ActorID:  manager.ID,
 	}
-	err = tx.Create(&employActor).Error
 
-	if err != nil {
+	res = tx.Create(&employActor)
+	if res.RowsAffected != 1 {
 		tx.Rollback()
-		return models.Account{}, err
+		return models.Account{}, fmt.Errorf("create company_actor err: %+v", res.Error)
 	}
+
+	tx.Commit()
 
 	return account, nil
 }

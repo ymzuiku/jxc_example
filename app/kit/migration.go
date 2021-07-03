@@ -18,7 +18,7 @@ func loadMigrationsDir() *migrate.FileMigrationSource {
 	}
 
 	migrations := &migrate.FileMigrationSource{
-		Dir: path.Join(EnvDir, dir),
+		Dir: path.Join(Env.Dir, dir),
 	}
 	return migrations
 }
