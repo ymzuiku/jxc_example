@@ -1,5 +1,7 @@
 package account
 
+import "gewu_jxc/models"
+
 type signUpBody struct {
 	Phone    string `json:"phone" validate:"required,min=3,max=32"`
 	Name     string `json:"name" validate:"required,min=2,max=32"`
@@ -25,4 +27,12 @@ type sendCodeBody struct {
 
 type removeBody struct {
 	Phone string `json:"phone" validate:"required,min=6,max=32"`
+}
+
+type accountRes struct {
+	Account    models.Account         `json:"account"`
+	Actors     []models.Actor         `json:"actors"`
+	Employs    []models.Employ        `json:"employs"`
+	Companys   []models.Company       `json:"companys"`
+	Permission models.ActorPermission `json:"permission"`
 }

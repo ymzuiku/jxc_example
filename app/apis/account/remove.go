@@ -20,24 +20,26 @@ func remove(body *removeBody) error {
 		return errors.New("不存在该手机号用户")
 	}
 
-	err = tx.Where("account_id = ?", &account.ID).Delete(&models.Company{}).Error
-	if err != nil {
+	var company models.Company
+	tx.Where("account_id = ?", &account.ID).Delete(&company)
+	if company.ID == 0 {
 		tx.Rollback()
-		return fmt.Errorf("delete company: %v", err)
+		return fmt.Errorf("delete company not found")
 	}
 
 	employ := models.Employ{}
 
-	err = tx.Where("account_id = ?", &account.ID).Delete(&employ).Error
-	if err != nil {
+	tx.Where("account_id = ?", &account.ID).Delete(&employ)
+	if employ.ID == 0 {
 		tx.Rollback()
-		return fmt.Errorf("delete company: %v", err)
+		return fmt.Errorf("delete company not found")
 	}
 
-	err = tx.Where("employ_id = ?", &employ.ID).Delete(&models.EmployActor{}).Error
-	if err != nil {
+	var employActor models.EmployActor
+	tx.Where("employ_id = ?", &employ.ID).Delete(&employActor)
+	if employActor.ID == 0 {
 		tx.Rollback()
-		return fmt.Errorf("delete employActor: %v", err)
+		return fmt.Errorf("delete employActor not found")
 	}
 
 	err = tx.Where("id = ?", &account.ID).Delete(&account).Error

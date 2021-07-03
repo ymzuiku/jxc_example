@@ -68,7 +68,7 @@ func TestSignIn(t *testing.T) {
 			t.Error(err)
 		}
 		_, err = signInWithCode(&signInWithCodeBody{
-			Phone: "19000000000",
+			Phone: "19900000000",
 			Code:  "999999",
 		})
 		if err == nil {
@@ -76,10 +76,25 @@ func TestSignIn(t *testing.T) {
 		}
 	})
 
+	t.Run("signIn with code", func(t *testing.T) {
+		err := signInSendCode(&sendCodeBody{Phone: phone})
+		if err != nil {
+			t.Error(err)
+		}
+		res, err := signInWithCode(&signInWithCodeBody{
+			Phone: phone,
+			Code:  "999999",
+		})
+		t.Errorf("%+v", res)
+		if err != nil {
+			t.Errorf("验证码登录错误: %v", err)
+		}
+	})
+
 	t.Run("signIn empty with password", func(t *testing.T) {
 		_, err := signInWithPassword(&signInWithPasswordBody{
-			Phone:    "19000000000",
-			Password: "123123123",
+			Phone:    "19900000000",
+			Password: "123123",
 		})
 		if err == nil {
 			t.Error("空账号密码登录没抛错误")

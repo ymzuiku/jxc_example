@@ -72,6 +72,7 @@ CREATE UNIQUE INDEX actor_name_idx ON actor (name);
 -- actor_permission -------------------------
 CREATE TABLE actor_permission (
   id serial PRIMARY KEY,
+  actor_id serial NOT NULL,
   name varchar(64) NOT NULL,
   company_read ok NOT NULL DEFAULT 'n',
   employ_create ok NOT NULL DEFAULT 'n',

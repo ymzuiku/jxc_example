@@ -84,6 +84,7 @@ type Actor struct {
 
 type ActorPermission struct {
 	ID           int32  `json:"id"`
+	ActorID      int32  `json:"actorID"`
 	Name         string `json:"name"`
 	CompanyRead  Ok     `json:"companyRead"`
 	EmployCreate Ok     `json:"employCreate"`

@@ -35,7 +35,7 @@ func signUp(body *signUpBody) (models.Account, error) {
 	}
 
 	res := tx.Create(&account)
-	if res.Error != nil {
+	if res.RowsAffected != 1 {
 		tx.Rollback()
 		return models.Account{}, res.Error
 	}
@@ -48,10 +48,10 @@ func signUp(body *signUpBody) (models.Account, error) {
 		Model:       models.CompanyModelFree,
 		DeployModel: models.CompanyDeployModelSaas,
 	}
-	err = tx.Create(&company).Error
-	if err != nil {
+	res = tx.Create(&company)
+	if res.RowsAffected != 1 {
 		tx.Rollback()
-		return models.Account{}, err
+		return models.Account{}, res.Error
 	}
 
 	// 创建员工

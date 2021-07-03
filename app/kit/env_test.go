@@ -14,6 +14,5 @@ func TestEnv(t *testing.T) {
 		if os.Getenv("DB_CONNECT_URL") == "" {
 			t.Error("No have DB_CONNECT_URL")
 		}
-		t.Error("oooooooo22o")
 	})
 }
