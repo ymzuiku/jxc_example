@@ -11,6 +11,9 @@ then
 elif [ "$1" == "dev" ]
 then
   upMigrate=999 air
+elif [ "$1" == "seeds" ]
+then
+  go run cmd/seeds/main.go
 else
   echo "please input: test |testc | build | dev"
 fi
