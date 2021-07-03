@@ -11,12 +11,12 @@ var phone = "13200000002"
 func TestSignUp(t *testing.T) {
 	kit.InitTest()
 
-	// t.Run("delete account no found", func(t *testing.T) {
-	// 	err := remove(&removeBody{Phone: "19900000001"})
-	// 	if err == nil {
-	// 		t.Errorf("不存在的手机号，未返回正确错误信息: %v", err)
-	// 	}
-	// })
+	t.Run("delete account no found", func(t *testing.T) {
+		err := remove(&removeBody{Phone: "19900000001"})
+		if err == nil {
+			t.Errorf("不存在的手机号，未返回正确错误信息: %v", err)
+		}
+	})
 
 	t.Run("delete account is found", func(t *testing.T) {
 		// 若没有历史账号，假意注册
