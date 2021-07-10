@@ -46,6 +46,31 @@ func (e *CompanyModel) Scan(src interface{}) error {
 	return nil
 }
 
+type CpmpanyPeople string
+
+const (
+	CpmpanyPeopleLess10    CpmpanyPeople = "less10"
+	CpmpanyPeopleLess50    CpmpanyPeople = "less50"
+	CpmpanyPeopleLess100   CpmpanyPeople = "less100"
+	CpmpanyPeopleLess500   CpmpanyPeople = "less500"
+	CpmpanyPeopleLess1000  CpmpanyPeople = "less1000"
+	CpmpanyPeopleLess5000  CpmpanyPeople = "less5000"
+	CpmpanyPeopleLess10000 CpmpanyPeople = "less10000"
+	CpmpanyPeopleMore10000 CpmpanyPeople = "more10000"
+)
+
+func (e *CpmpanyPeople) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = CpmpanyPeople(s)
+	case string:
+		*e = CpmpanyPeople(s)
+	default:
+		return fmt.Errorf("unsupported scan type for CpmpanyPeople: %T", src)
+	}
+	return nil
+}
+
 type Ok string
 
 const (
@@ -95,9 +120,8 @@ type ActorPermission struct {
 
 type Company struct {
 	ID          int32              `json:"id"`
-	AccountID   int32              `json:"accountID"`
 	Name        string             `json:"name"`
-	People      string             `json:"people"`
+	People      CpmpanyPeople      `json:"people"`
 	Model       CompanyModel       `json:"model"`
 	DeployModel CompanyDeployModel `json:"deployModel"`
 	CreatedAt   time.Time          `json:"createdAt"`
@@ -108,6 +132,7 @@ type Employ struct {
 	ID        int32     `json:"id"`
 	AccountID int32     `json:"accountID"`
 	CompanyID int32     `json:"companyID"`
+	Boss      Ok        `json:"boss"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdateAt  time.Time `json:"updateAt"`
 }

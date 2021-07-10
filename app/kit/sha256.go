@@ -5,10 +5,8 @@ import (
 	"fmt"
 )
 
-var salt = "gewu_sha_salt_jxc"
-
 func Sha256(text string) string {
-	h := sha256.Sum256([]byte(text + salt))
+	h := sha256.Sum256([]byte(text + Env.Sha256Slat))
 	out := fmt.Sprintf("%x", h)
 	return out
 }

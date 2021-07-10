@@ -10,7 +10,7 @@ import (
 
 // 注册
 
-func SignUpSendCodeApi(c *fiber.Ctx) error {
+func RegisterSendCodeApi(c *fiber.Ctx) error {
 	var body sendCodeBody
 
 	err := c.BodyParser(&body)
@@ -18,7 +18,7 @@ func SignUpSendCodeApi(c *fiber.Ctx) error {
 		return err
 	}
 
-	err = signUpSendCode(&body)
+	err = registerSendCode(body)
 
 	if err != nil {
 		return err
@@ -27,14 +27,30 @@ func SignUpSendCodeApi(c *fiber.Ctx) error {
 	return c.JSON(kit.Ok(true))
 }
 
-func SignUpApi(c *fiber.Ctx) error {
-	var body signUpBody
+func RegisterEmployApi(c *fiber.Ctx) error {
+	var body registerBody
 	err := c.BodyParser(&body)
 	if err != nil {
 		return err
 	}
 
-	account, err := signUp(&body)
+	account, err := registerEmploy(body)
+
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(kit.Ok(account))
+}
+
+func RegisterCompanyApi(c *fiber.Ctx) error {
+	var body registerCompanyBody
+	err := c.BodyParser(&body)
+	if err != nil {
+		return err
+	}
+
+	account, err := registerCompany(body)
 
 	if err != nil {
 		return err
@@ -53,7 +69,7 @@ func SignInSendCodeApi(c *fiber.Ctx) error {
 		return err
 	}
 
-	err = signInSendCode(&body)
+	err = signInSendCode(body)
 
 	if err != nil {
 		return err
@@ -70,13 +86,13 @@ func SignInWithCodeApi(c *fiber.Ctx) error {
 		return err
 	}
 
-	account, err := signInWithCode(&body)
+	accountRes, err := signInWithCode(body)
 
 	if err != nil {
 		return err
 	}
 
-	return c.JSON(kit.Ok(account))
+	return c.JSON(kit.Ok(accountRes))
 }
 
 func SignInWithPasswordApi(c *fiber.Ctx) error {
@@ -87,13 +103,13 @@ func SignInWithPasswordApi(c *fiber.Ctx) error {
 		return err
 	}
 
-	account, err := signInWithPassword(&body)
+	accountRes, err := signInWithPassword(body)
 
 	if err != nil {
 		return err
 	}
 
-	return c.JSON(kit.Ok(account))
+	return c.JSON(kit.Ok(accountRes))
 }
 
 func RemoveApi(c *fiber.Ctx) error {
@@ -103,7 +119,7 @@ func RemoveApi(c *fiber.Ctx) error {
 		return err
 	}
 
-	err = remove(&body)
+	err = remove(body)
 
 	if err != nil {
 		return err

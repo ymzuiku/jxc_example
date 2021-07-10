@@ -22,25 +22,26 @@ CREATE UNIQUE INDEX account_phone_x ON account (phone);
 CREATE TYPE company_model AS ENUM ('free', 'normal', 'prod');
 -- 0:saas 1:私有化部署
 CREATE TYPE company_deploy_model AS ENUM ('saas', 'private');
+CREATE TYPE cpmpany_people AS ENUM ('less10', 'less50', 'less100', 'less500', 'less1000', 'less5000', 'less10000', 'more10000');
 
 CREATE TABLE company (
   id serial PRIMARY KEY,
-  account_id serial NOT NULL,
   name varchar(64) NOT NULL,
-  people varchar(64) NOT NULL,
+  people cpmpany_people NOT NULL DEFAULT 'less10',
   model company_model NOT NULL DEFAULT 'free',
   deploy_model company_deploy_model NOT NULL DEFAULT 'saas',
   created_at timestamptz NOT NULL DEFAULT now(),
   update_at timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE INDEX company_account_id_x ON company (account_id);
+CREATE INDEX company_name_x ON company (name);
 
 -- company -------------------------------
 CREATE TABLE employ (
   id serial PRIMARY KEY,
   account_id serial NOT NULL,
   company_id serial NOT NULL,
+  boss ok NOT NULL DEFAULT 'n',
   created_at timestamptz NOT NULL DEFAULT now(),
   update_at timestamptz NOT NULL DEFAULT now()
 );
@@ -93,3 +94,4 @@ DROP TABLE actor_permission;
 DROP TYPE ok;
 DROP TYPE company_model;
 DROP TYPE company_deploy_model;
+DROP TYPE cpmpany_people;

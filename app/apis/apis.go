@@ -6,8 +6,9 @@ import (
 )
 
 func Init() {
-	kit.Fiber.Post("/v1/account/signup/sendcode", account.SignUpSendCodeApi)
-	kit.Fiber.Post("/v1/account/signup", account.SignUpApi)
+	kit.Fiber.Post("/v1/account/register/sendcode", account.RegisterSendCodeApi)
+	kit.Fiber.Post("/v1/account/register/company", account.RegisterCompanyApi)
+	kit.Fiber.Post("/v1/account/register/employ", account.RegisterEmployApi)
 
 	kit.Fiber.Post("/v1/account/signin/sendcode", account.SignInSendCodeApi)
 	kit.Fiber.Post("/v1/account/signin/code", account.SignInWithCodeApi)

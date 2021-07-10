@@ -3,7 +3,7 @@ tmp_dir = "tmp"
 
 [build]
 bin = "./tmp/main"
-cmd = "go test ./app/... -count=1 -cover -tags test"
+cmd = "go test ./app/... -count=1 -tags test"
 delay = 150
 exclude_dir = ["assets", "tmp", "vendor", "migrations", ".1-gitbk", ".2-gitbk"]
 exclude_file = ["README.md", ".gitignore"]

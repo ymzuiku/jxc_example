@@ -132,6 +132,7 @@ sqlm generate
 - -cover 查看测试覆盖率
 - -tags test 忽略文件首行包含 `//+build !test` 的文件进行覆盖测试,记得文件第二行需要换行
 - -coverprofile=t.out 导出测试描述
+- -v 测试即便成功，也显示过程和日志
 
 测试并计算覆盖率
 
@@ -141,8 +142,26 @@ go test ./app/... -count=1 -cover -tags test -coverprofile=t.out
 
 显示具体测试覆盖率 html
 
-```
+```bash
 go tool cover -html=t.out
+```
+
+仅执行某个函数
+
+```bash
+go test ./app/... -count=1 -test.run TestHas
+```
+
+## 性能测试
+
+首先性能测试需要进入到相应的目录,如 xxx/benchamark 然后执行:
+
+- -bench='Generate' 表示匹配 func BenchmarkXXX 中包含 `Generate` 字样的名称:
+- -test.benchmen 表示显示内存用量和内存分配次数
+- -benchtime=5s -benchtime=50x 表示执行 5 秒或者默认的 50 倍
+
+```bash
+go test -bench='Generate' .  -test.benchmem
 ```
 
 ## 配置 dbconfig.yml(可选)

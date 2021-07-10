@@ -5,17 +5,22 @@ import (
 	"log"
 	"os"
 	"path"
+	"sync"
 
 	"github.com/joho/godotenv"
 )
 
 type TheEnv struct {
-	IsDev bool
-	Dir   string
+	IsDev      bool
+	Dir        string
+	Jwt        []byte
+	JwtIss     string
+	Session    string
+	Sha256Slat string
 }
 
+var onceEnvInit sync.Once
 var Env = &TheEnv{}
-var loaded = false
 
 func loadDotEnvFile(twd string) string {
 	str := path.Join(twd, ".env")
@@ -27,21 +32,25 @@ func loadDotEnvFile(twd string) string {
 	return str
 }
 
-func EnvInit() {
-	if loaded {
-		return
-	}
-	loaded = true
-
+func envInit() {
 	file, err := os.Getwd()
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-	if err != nil {
-		log.Fatalln(err)
-	}
 	file = loadDotEnvFile(file)
-	err = godotenv.Load(file)
-	if err != nil {
+
+	if err := godotenv.Load(file); err != nil {
 		log.Fatalln(err)
 	}
+
 	Env.IsDev = os.Getenv("DEV") != ""
+	Env.Jwt = []byte(os.Getenv("JWT"))
+	Env.JwtIss = os.Getenv("JWTISS")
+	Env.Session = os.Getenv("SESSION")
+	Env.Sha256Slat = os.Getenv("SHA256_SALT")
+}
+
+func EnvInit() {
+	onceEnvInit.Do(envInit)
 }

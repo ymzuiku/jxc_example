@@ -6,6 +6,6 @@ import (
 )
 
 func main() {
-	kit.InitTest()
+	kit.TestInit()
 	account.Seeds()
 }
