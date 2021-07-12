@@ -14,9 +14,8 @@ require (
 	github.com/klauspost/compress v1.13.1 // indirect
 	github.com/lib/pq v1.10.2 // indirect
 	github.com/mitchellh/mapstructure v1.1.2
-	github.com/rubenv/sql-migrate v0.0.0-20210614095031-55d5740dbbcc
 	github.com/stretchr/testify v1.7.0
-	github.com/ziutek/mymysql v1.5.4 // indirect
+	github.com/ymzuiku/env_migrate v0.0.0-20210712095240-fe16c6ef3ee5
 	golang.org/x/sys v0.0.0-20210615035016-665e8c7367d1 // indirect
 	gorm.io/driver/postgres v1.1.0
 	gorm.io/gorm v1.21.11

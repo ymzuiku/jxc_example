@@ -8,39 +8,54 @@ import (
 	"sync"
 
 	"github.com/joho/godotenv"
+	"github.com/ymzuiku/env_migrate"
 )
 
 type TheEnv struct {
 	IsDev      bool
-	Dir        string
 	Jwt        []byte
 	JwtIss     string
 	Session    string
 	Sha256Slat string
+	RootDir    string
+	FileDir    string
 }
 
 var onceEnvInit sync.Once
 var Env = &TheEnv{}
 
-func loadDotEnvFile(twd string) string {
-	str := path.Join(twd, ".env")
+func loadFileDir() {
+	if Env.FileDir == "" {
+		file, err := os.Getwd()
+		if err != nil {
+			log.Fatalln(err)
+		}
+		Env.FileDir = file
+	}
+}
+
+func loadRootDir(twd string) {
+	str := path.Join(twd, "go.mod")
 	if !PathExists(str) {
 		fmt.Println(path.Join(twd, ".."))
-		return loadDotEnvFile(path.Join(twd, ".."))
+		loadRootDir(path.Join(twd, ".."))
+		return
 	}
-	Env.Dir = path.Dir(str)
-	return str
+	Env.RootDir = path.Dir(str)
 }
 
 func envInit() {
-	file, err := os.Getwd()
-	if err != nil {
-		log.Fatalln(err)
+	loadFileDir()
+	loadRootDir(Env.FileDir)
+
+	envLocal := path.Join(Env.RootDir, ".env")
+	if PathExists(envLocal) {
+		if err := godotenv.Load(envLocal); err != nil {
+			log.Fatalln(err)
+		}
 	}
 
-	file = loadDotEnvFile(file)
-
-	if err := godotenv.Load(file); err != nil {
+	if err := godotenv.Load(path.Join(Env.RootDir, ".base.env")); err != nil {
 		log.Fatalln(err)
 	}
 
@@ -49,6 +64,8 @@ func envInit() {
 	Env.JwtIss = os.Getenv("JWTISS")
 	Env.Session = os.Getenv("SESSION")
 	Env.Sha256Slat = os.Getenv("SHA256_SALT")
+
+	env_migrate.BaseRootDir = Env.RootDir
 }
 
 func EnvInit() {

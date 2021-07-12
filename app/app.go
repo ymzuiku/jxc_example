@@ -6,6 +6,8 @@ import (
 	"log"
 	"math/rand"
 	"time"
+
+	"github.com/ymzuiku/env_migrate"
 )
 
 func Init() {
@@ -13,7 +15,7 @@ func Init() {
 	kit.EnvInit()
 	kit.PgInit()
 	kit.RedisInit()
-	kit.Migration(kit.Db)
+	env_migrate.Auto(kit.Db)
 	kit.FiberInit()
 	apis.Init()
 	log.Fatal(kit.Fiber.Listen(":3100"))
