@@ -12,5 +12,5 @@ func signInWithPassword(body signInWithPasswordBody) (Account, error) {
 		return Account{}, fmt.Errorf("您输入的账号或密码不正确")
 	}
 
-	return loadAccount(account)
+	return loadAccount(account.ID)
 }

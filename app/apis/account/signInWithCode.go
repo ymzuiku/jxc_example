@@ -18,6 +18,6 @@ func signInWithCode(body signInWithCodeBody) (Account, error) {
 		return Account{}, err
 	}
 
-	return loadAccount(account)
+	return loadAccount(account.ID)
 
 }

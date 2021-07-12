@@ -3,143 +3,54 @@
 package models
 
 import (
-	"fmt"
+	"database/sql"
 	"time"
 )
 
-type CompanyDeployModel string
-
-const (
-	CompanyDeployModelSaas    CompanyDeployModel = "saas"
-	CompanyDeployModelPrivate CompanyDeployModel = "private"
-)
-
-func (e *CompanyDeployModel) Scan(src interface{}) error {
-	switch s := src.(type) {
-	case []byte:
-		*e = CompanyDeployModel(s)
-	case string:
-		*e = CompanyDeployModel(s)
-	default:
-		return fmt.Errorf("unsupported scan type for CompanyDeployModel: %T", src)
-	}
-	return nil
-}
-
-type CompanyModel string
-
-const (
-	CompanyModelFree   CompanyModel = "free"
-	CompanyModelNormal CompanyModel = "normal"
-	CompanyModelProd   CompanyModel = "prod"
-)
-
-func (e *CompanyModel) Scan(src interface{}) error {
-	switch s := src.(type) {
-	case []byte:
-		*e = CompanyModel(s)
-	case string:
-		*e = CompanyModel(s)
-	default:
-		return fmt.Errorf("unsupported scan type for CompanyModel: %T", src)
-	}
-	return nil
-}
-
-type CpmpanyPeople string
-
-const (
-	CpmpanyPeopleLess10    CpmpanyPeople = "less10"
-	CpmpanyPeopleLess50    CpmpanyPeople = "less50"
-	CpmpanyPeopleLess100   CpmpanyPeople = "less100"
-	CpmpanyPeopleLess500   CpmpanyPeople = "less500"
-	CpmpanyPeopleLess1000  CpmpanyPeople = "less1000"
-	CpmpanyPeopleLess5000  CpmpanyPeople = "less5000"
-	CpmpanyPeopleLess10000 CpmpanyPeople = "less10000"
-	CpmpanyPeopleMore10000 CpmpanyPeople = "more10000"
-)
-
-func (e *CpmpanyPeople) Scan(src interface{}) error {
-	switch s := src.(type) {
-	case []byte:
-		*e = CpmpanyPeople(s)
-	case string:
-		*e = CpmpanyPeople(s)
-	default:
-		return fmt.Errorf("unsupported scan type for CpmpanyPeople: %T", src)
-	}
-	return nil
-}
-
-type Ok string
-
-const (
-	OkN Ok = "n"
-	OkY Ok = "y"
-)
-
-func (e *Ok) Scan(src interface{}) error {
-	switch s := src.(type) {
-	case []byte:
-		*e = Ok(s)
-	case string:
-		*e = Ok(s)
-	default:
-		return fmt.Errorf("unsupported scan type for Ok: %T", src)
-	}
-	return nil
-}
-
 type Account struct {
-	ID        int32     `json:"id"`
-	Name      string    `json:"name"`
-	Phone     string    `json:"phone"`
-	Email     string    `json:"email"`
-	Password  string    `json:"password"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdateAt  time.Time `json:"updateAt"`
+	ID        int32          `json:"id"`
+	Name      string         `json:"name"`
+	Phone     string         `json:"phone"`
+	Email     sql.NullString `json:"email"`
+	Password  string         `json:"password"`
+	CreatedAt time.Time      `json:"createdAt"`
+	UpdateAt  time.Time      `json:"updateAt"`
 }
 
-type Actor struct {
-	ID          int32     `json:"id"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	CreatedAt   time.Time `json:"createdAt"`
-}
-
-type ActorPermission struct {
-	ID           int32  `json:"id"`
-	ActorID      int32  `json:"actorID"`
-	Name         string `json:"name"`
-	CompanyRead  Ok     `json:"companyRead"`
-	EmployCreate Ok     `json:"employCreate"`
-	EmployRead   Ok     `json:"employRead"`
-	EmployUpdate Ok     `json:"employUpdate"`
-	EmployDelete Ok     `json:"employDelete"`
+type Author struct {
+	ID           int32          `json:"id"`
+	Name         string         `json:"name"`
+	Description  sql.NullString `json:"description"`
+	CreatedAt    time.Time      `json:"createdAt"`
+	CompanyRead  bool           `json:"companyRead"`
+	EmployCreate bool           `json:"employCreate"`
+	EmployRead   bool           `json:"employRead"`
+	EmployUpdate bool           `json:"employUpdate"`
+	EmployDelete bool           `json:"employDelete"`
 }
 
 type Company struct {
-	ID          int32              `json:"id"`
-	Name        string             `json:"name"`
-	People      CpmpanyPeople      `json:"people"`
-	Model       CompanyModel       `json:"model"`
-	DeployModel CompanyDeployModel `json:"deployModel"`
-	CreatedAt   time.Time          `json:"createdAt"`
-	UpdateAt    time.Time          `json:"updateAt"`
+	ID          int32     `json:"id"`
+	Name        string    `json:"name"`
+	People      int32     `json:"people"`
+	Model       int16     `json:"model"`
+	DeployModel int16     `json:"deployModel"`
+	CreatedAt   time.Time `json:"createdAt"`
+	UpdateAt    time.Time `json:"updateAt"`
 }
 
 type Employ struct {
 	ID        int32     `json:"id"`
 	AccountID int32     `json:"accountID"`
 	CompanyID int32     `json:"companyID"`
-	Boss      Ok        `json:"boss"`
+	Boss      bool      `json:"boss"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdateAt  time.Time `json:"updateAt"`
 }
 
-type EmployActor struct {
+type EmployAuthor struct {
 	ID        int32     `json:"id"`
 	EmployID  int32     `json:"employID"`
-	ActorID   int32     `json:"actorID"`
+	AuthorID  int32     `json:"authorID"`
 	CreatedAt time.Time `json:"createdAt"`
 }

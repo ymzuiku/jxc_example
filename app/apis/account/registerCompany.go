@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"gewu_jxc/app/kit"
 	"gewu_jxc/models"
-	"time"
 )
 
 var REGISTER_COMPANY_CODE = "register-phone:"
@@ -16,67 +15,25 @@ func registerCompany(body registerCompanyBody) (Account, error) {
 		return Account{}, errors.New("您输入的验证码不正确")
 	}
 
-	// 读取管理员角色
-	manager := models.Actor{}
-	if res := kit.ORM.Where("name = ?", "Manager").Take(&manager); res.RowsAffected != 1 {
-		return Account{}, res.Error
+	company := models.Company{Name: body.Company, People: body.People}
+	author := Author{Author: models.Author{ID: 1}}
+	employ := Employ{
+		Employ:  models.Employ{Boss: true},
+		Company: company,
+		Authors: []Author{author},
 	}
 
-	tx := kit.ORM.Begin()
-
-	// 创建账号
-	account := models.Account{
-		Name:     body.Name,
-		Phone:    body.Phone,
-		Password: kit.Sha256(body.Password),
-		UpdateAt: time.Now(),
+	input := Account{
+		Account: models.Account{
+			Name:     body.Name,
+			Phone:    body.Phone,
+			Password: kit.Sha256(body.Password),
+		},
+		Employs: []Employ{employ},
+	}
+	if res := kit.ORM.Create(&input); res.Error != nil || res.RowsAffected != 1 {
+		return Account{}, fmt.Errorf("创建 account 失败: %v", res.Error)
 	}
 
-	if err := tx.Create(&account).Error; err != nil {
-		tx.Rollback()
-		return Account{}, fmt.Errorf("create account err: %+v", err)
-	}
-
-	// 创建企业
-	company := models.Company{
-		Name:        body.Company,
-		People:      body.People,
-		Model:       models.CompanyModelFree,
-		DeployModel: models.CompanyDeployModelSaas,
-	}
-	if res := tx.Create(&company); res.RowsAffected != 1 {
-		tx.Rollback()
-		return Account{}, fmt.Errorf("create company err: %+v", res.Error)
-	}
-
-	// 创建员工
-	employ := models.Employ{
-		AccountID: account.ID,
-		CompanyID: company.ID,
-		Boss:      models.OkY, // 此人是企业主
-	}
-	if res := tx.Create(&employ); res.RowsAffected != 1 {
-		tx.Rollback()
-		return Account{}, fmt.Errorf("create employ err: %+v", res.Error)
-	}
-
-	// 创建角色权限映射
-	employActor := models.EmployActor{
-		EmployID: employ.ID,
-		ActorID:  manager.ID,
-	}
-
-	if res := tx.Create(&employActor); res.RowsAffected != 1 {
-		tx.Rollback()
-		return Account{}, fmt.Errorf("create employ_actor err: %+v", res.Error)
-	}
-
-	tx.Commit()
-
-	var relAccount models.Account
-	if res := kit.ORM.Where("phone = ?", body.Phone).Take(&relAccount); res.RowsAffected != 1 {
-		return Account{}, fmt.Errorf("find created account err: %+v", res.Error)
-	}
-
-	return loadAccount(relAccount)
+	return loadAccount(input.ID)
 }

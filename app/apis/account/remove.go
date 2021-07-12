@@ -3,46 +3,48 @@ package account
 import (
 	"fmt"
 	"gewu_jxc/app/kit"
-	"gewu_jxc/models"
 )
 
 func remove(body removeBody) error {
 	// 读取账户信息
-	var account models.Account
-	if err := kit.ORM.Where("phone = ?", body.Phone).Take(&account).Error; err != nil {
+	var account Account
+	if err := kit.ORM.Where("phone = ? and password = ?", body.Phone, kit.Sha256(body.Password)).Take(&account).Error; err != nil {
 		return fmt.Errorf("删除账户关联信息, 不存在该手机号用户: %v", err)
 	}
 
-	// 查找相关雇员信息
-	var employ models.Employ
-	if err := kit.ORM.Where("account_id = ?", account.ID).Take(&employ).Error; err != nil {
-		return fmt.Errorf("删除过程中，查找雇员失败: %+v", err)
+	load, err := loadAccount(account.ID)
+	if err != nil {
+		return fmt.Errorf("删除账户中，查询账户信息失败: %v\n", err)
+	}
+
+	companyIDs := make([]int32, 0, len(load.Employs))
+	employIDs := make([]int32, 0, len(load.Employs))
+	for _, v := range load.Employs {
+		if v.Boss {
+			companyIDs = append(companyIDs, v.CompanyID)
+		}
+		employIDs = append(employIDs, v.ID)
 	}
 
 	tx := kit.ORM.Begin()
-
-	// 删除雇员
-	if err := tx.Table("employ").Where("account_id = ?", &account.ID).Delete(nil).Error; err != nil {
+	if err := tx.Delete(&load).Error; err != nil {
 		tx.Rollback()
-		return fmt.Errorf("删除过程中, 删除雇员失败: %+v", err)
+		return fmt.Errorf("删除账户中，账户删除失败: %v\n", err)
 	}
 
-	// 删除企业
-	if err := tx.Table("company").Where("id = ?", employ.CompanyID).Delete(nil).Error; err != nil {
+	if err := tx.Delete(&load.Employs).Error; err != nil {
 		tx.Rollback()
-		return fmt.Errorf("删除过程中, 删除企业失败: %+v", err)
+		return fmt.Errorf("删除账户中，删除 Employ 失败: %+v\n", err)
 	}
 
-	// 删除雇员角色中间表
-	if err := tx.Table("employ_actor").Where("employ_id = ?", &employ.ID).Delete(nil).Error; err != nil {
+	if res := tx.Table("company").Where("id in ?", companyIDs).Delete(nil); res.RowsAffected == 0 || res.Error != nil {
 		tx.Rollback()
-		return fmt.Errorf("删除过程中, 删除雇员角色中间表失败: %+v", err)
+		return fmt.Errorf("删除账户中，删除 company 失败: %+v\n", res.Error)
 	}
 
-	// 删除雇账户
-	if err := tx.Table("account").Where("id = ?", &account.ID).Delete(nil).Error; err != nil {
+	if res := tx.Table("employ_author").Where("employ_id in ?", employIDs).Delete(nil); res.RowsAffected == 0 || res.Error != nil {
 		tx.Rollback()
-		return fmt.Errorf("删除过程中, 删除账户: %+v", err)
+		return fmt.Errorf("删除账户中，删除 employ_author 失败: %+v\n", res.Error)
 	}
 
 	tx.Commit()

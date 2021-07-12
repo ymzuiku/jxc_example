@@ -3,20 +3,19 @@ package account
 import (
 	"fmt"
 	"gewu_jxc/app/kit"
-	"gewu_jxc/models"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-var phone = "13200000016"
+var phone = "1320000010"
 var password = "123123123"
 var registerCompanyData = registerCompanyBody{
 	Phone:    phone,
 	Code:     "999999",
-	Company:  "测试企业",
+	Company:  "测试企业" + phone,
 	Name:     "测试企业用户",
-	People:   models.CpmpanyPeopleLess10,
+	People:   10,
 	Password: password,
 }
 
@@ -24,7 +23,7 @@ func TestRegister(t *testing.T) {
 	kit.TestInit()
 
 	t.Run("delete account no found", func(t *testing.T) {
-		err := remove(removeBody{Phone: "19900000001"})
+		err := remove(removeBody{Phone: "19900000001", Password: password})
 		kit.ExitIf(assert.NotNil(t, err))
 	})
 
@@ -34,13 +33,31 @@ func TestRegister(t *testing.T) {
 			fmt.Println(err)
 		}
 
-		if _, ignoreErr := registerCompany(registerCompanyData); ignoreErr != nil {
+		data, ignoreErr := registerCompany(registerCompanyData)
+		hasCompany := true
+		if ignoreErr != nil {
+			hasCompany = false
 			fmt.Printf("假意注册错误，可忽略: %s\n", ignoreErr.Error())
 		}
 
-		err := remove(removeBody{Phone: phone})
+		err := remove(removeBody{Phone: phone, Password: password})
 
 		kit.ExitIf(assert.Nil(t, err))
+
+		if hasCompany {
+			err = kit.ORM.Table("account").Where("id = ?", data.ID).Take(nil).Error
+			kit.ExitIf(assert.NotNil(t, err))
+
+			err = kit.ORM.Table("company").Where("id = ?", data.Employs[0].CompanyID).Take(nil).Error
+			kit.ExitIf(assert.NotNil(t, err))
+
+			err = kit.ORM.Table("employ").Where("account_id = ?", data.ID).Take(nil).Error
+			kit.ExitIf(assert.NotNil(t, err))
+
+			err = kit.ORM.Table("employ_author").Where("employ_id = ?", data.Employs[0].ID).Take(nil).Error
+			kit.ExitIf(assert.NotNil(t, err))
+
+		}
 
 	})
 
@@ -51,17 +68,14 @@ func TestRegister(t *testing.T) {
 		data, err := registerCompany(registerCompanyData)
 		kit.ExitIf(assert.Nil(t, err))
 
-		t.Errorf("%+v", data)
-
 		kit.ExitIf(assert.NotEqual(t, data.Account.ID, 0))
-		kit.ExitIf(assert.True(t, len(data.Actors) > 0))
 		kit.ExitIf(assert.True(t, len(data.Employs) > 0))
-		kit.ExitIf(assert.True(t, len(data.Companys) > 0))
-		kit.ExitIf(assert.Equal(t, data.Permission.CompanyRead, models.OkY))
-		kit.ExitIf(assert.Equal(t, data.Permission.EmployCreate, models.OkY))
-		kit.ExitIf(assert.Equal(t, data.Permission.EmployDelete, models.OkY))
-		kit.ExitIf(assert.Equal(t, data.Permission.EmployRead, models.OkY))
-		kit.ExitIf(assert.Equal(t, data.Permission.EmployUpdate, models.OkY))
+		kit.ExitIf(assert.True(t, len(data.Employs[0].Authors) > 0))
+		kit.ExitIf(assert.Equal(t, data.Employs[0].Permission.CompanyRead, true))
+		kit.ExitIf(assert.Equal(t, data.Employs[0].Permission.EmployCreate, true))
+		kit.ExitIf(assert.Equal(t, data.Employs[0].Permission.EmployDelete, true))
+		kit.ExitIf(assert.Equal(t, data.Employs[0].Permission.EmployRead, true))
+		kit.ExitIf(assert.Equal(t, data.Employs[0].Permission.EmployUpdate, true))
 	})
 
 }
@@ -102,16 +116,14 @@ func TestSignIn(t *testing.T) {
 			Password: password,
 		})
 
-		t.Errorf("%+v", data)
 		kit.ExitIf(assert.NotEqual(t, data.Account.ID, 0))
-		kit.ExitIf(assert.True(t, len(data.Actors) > 0))
 		kit.ExitIf(assert.True(t, len(data.Employs) > 0))
-		kit.ExitIf(assert.True(t, len(data.Companys) > 0))
-		kit.ExitIf(assert.Equal(t, data.Permission.CompanyRead, models.OkY))
-		kit.ExitIf(assert.Equal(t, data.Permission.EmployCreate, models.OkY))
-		kit.ExitIf(assert.Equal(t, data.Permission.EmployDelete, models.OkY))
-		kit.ExitIf(assert.Equal(t, data.Permission.EmployRead, models.OkY))
-		kit.ExitIf(assert.Equal(t, data.Permission.EmployUpdate, models.OkY))
+		kit.ExitIf(assert.True(t, len(data.Employs[0].Authors) > 0))
+		kit.ExitIf(assert.Equal(t, data.Employs[0].Permission.CompanyRead, true))
+		kit.ExitIf(assert.Equal(t, data.Employs[0].Permission.EmployCreate, true))
+		kit.ExitIf(assert.Equal(t, data.Employs[0].Permission.EmployDelete, true))
+		kit.ExitIf(assert.Equal(t, data.Employs[0].Permission.EmployRead, true))
+		kit.ExitIf(assert.Equal(t, data.Employs[0].Permission.EmployUpdate, true))
 
 		kit.ExitIf(assert.Nil(t, err))
 	})

@@ -47,8 +47,12 @@ func gormLog() logger.Interface {
 func PgInit() {
 	var err error
 
-	if ORM, err = gorm.Open(postgres.Open(os.Getenv("DB_CONNECT_URL")), &gorm.Config{
-		CreateBatchSize: 65535,
+	if ORM, err = gorm.Open(postgres.New(postgres.Config{
+		DSN:                  os.Getenv("DB_CONNECT_URL"),
+		PreferSimpleProtocol: true,
+	}), &gorm.Config{
+		// PrepareStmt:     true,
+		CreateBatchSize: 1000,
 		Logger:          gormLog(),
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,

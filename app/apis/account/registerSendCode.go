@@ -2,7 +2,7 @@ package account
 
 import (
 	"context"
-	"errors"
+	"fmt"
 	"gewu_jxc/app/kit"
 	"gewu_jxc/models"
 	"time"
@@ -11,7 +11,7 @@ import (
 func registerSendCode(body sendCodeBody) error {
 	account := models.Account{}
 	if err := kit.ORM.Where("phone = ?", body.Phone).Take(&account).Error; err == nil {
-		return errors.New("手机号已注册，请使用该手机号登录")
+		return fmt.Errorf("手机号已注册，请使用该手机号登录: %v\n", err)
 	}
 
 	code := kit.RandomCode(6)

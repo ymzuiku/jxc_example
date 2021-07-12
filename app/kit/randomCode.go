@@ -1,20 +1,29 @@
 package kit
 
 import (
-	"math"
+	"fmt"
 	"math/rand"
-	"strconv"
+	"strings"
+	"time"
 )
 
 // 确保位数一样的字符串，适合用于短信验证码
-func RandomCode(digits int) string {
+func RandomCode(width int) string {
 	if Env.IsDev {
 		return "999999"
 	}
-	min := int(math.Pow(10, float64(digits))) - 1
-	max := min*10 + 9
-	num := rand.Intn(max) + min
-	label := strconv.Itoa(num)
-	out := label[0 : len(label)-1]
-	return out
+	return RandomCodeBase(width)
+}
+
+func RandomCodeBase(width int) string {
+	numeric := [10]byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+	r := len(numeric)
+	rand.Seed(time.Now().UnixNano())
+
+	var sb strings.Builder
+	for i := 0; i < width; i++ {
+		fmt.Fprintf(&sb, "%d", numeric[rand.Intn(r)])
+	}
+	return sb.String()
+
 }
