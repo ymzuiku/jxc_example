@@ -1,11 +1,16 @@
 package main
 
 import (
-	"gewu_jxc/app/apis/account"
-	"gewu_jxc/app/kit"
+	"math/rand"
+	"time"
+
+	"github.com/ymzuiku/gewu_jxc/pkg/env"
+	"github.com/ymzuiku/gewu_jxc/pkg/testh"
 )
 
 func main() {
-	kit.TestInit()
-	account.Seeds()
+	rand.Seed(time.Now().UnixNano())
+	env.IgnoreSQLLog = true
+	testh.UnitTest()
+	Seeds()
 }

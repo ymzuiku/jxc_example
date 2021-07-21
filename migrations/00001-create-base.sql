@@ -5,12 +5,13 @@ CREATE TABLE author (
   id serial PRIMARY KEY,
   name varchar(64) NOT NULL,
   description varchar(1024),
+  boss boolean NOT NULL DEFAULT FALSE,
   created_at timestamptz NOT NULL DEFAULT now(),
   company_read boolean NOT NULL DEFAULT FALSE,
-  employ_create boolean NOT NULL DEFAULT FALSE,
-  employ_read boolean NOT NULL DEFAULT FALSE,
-  employ_update boolean NOT NULL DEFAULT FALSE,
-  employ_delete boolean NOT NULL DEFAULT FALSE
+  employee_create boolean NOT NULL DEFAULT FALSE,
+  employee_read boolean NOT NULL DEFAULT FALSE,
+  employee_update boolean NOT NULL DEFAULT FALSE,
+  employee_delete boolean NOT NULL DEFAULT FALSE
 );
 
 CREATE UNIQUE INDEX author_name_idx ON author (name);
@@ -49,34 +50,33 @@ CREATE UNIQUE INDEX account_phone_x ON account (phone);
 
 
 -- company -------------------------------
-CREATE TABLE employ (
+CREATE TABLE employee (
   id serial PRIMARY KEY,
   account_id serial NOT NULL,
   company_id serial NOT NULL,
-  boss boolean NOT NULL DEFAULT FALSE,
   created_at timestamptz NOT NULL DEFAULT now(),
   update_at timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE INDEX employ_account_id_x ON employ (account_id);
-CREATE INDEX employ_company_id_x ON employ (company_id);
+CREATE INDEX employee_account_id_x ON employee (account_id);
+CREATE INDEX employee_company_id_x ON employee (company_id);
 
 
--- employ_author ----------------------------
-CREATE TABLE employ_author (
+-- employee_author ----------------------------
+CREATE TABLE employee_author (
   id serial PRIMARY KEY,
-  employ_id serial NOT NULL,
+  employee_id serial NOT NULL,
   author_id serial NOT NULL,
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE UNIQUE INDEX employ_author_employ_id_idx ON employ_author (employ_id);
-CREATE INDEX employ_author_author_id_idx ON employ_author (author_id);
+CREATE INDEX employee_author_employee_id_idx ON employee_author (employee_id);
+CREATE INDEX employee_author_author_id_idx ON employee_author (author_id);
 
 
 -- +migrate Down
-DROP TABLE employ_author;
+DROP TABLE employee_author;
 DROP TABLE author;
-DROP TABLE employ;
+DROP TABLE employee;
 DROP TABLE company;
 DROP TABLE account;

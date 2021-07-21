@@ -2,6 +2,12 @@
 
 格物进销存服务端
 
+## 参考
+
+目录结构: https://github.com/golang-standards/project-layout
+
+代码规范: https://github.com/xxjwxc/uber_go_guide_cn
+
 ## 常用命令
 
 编译 linux
@@ -25,13 +31,13 @@ up_igrate=all air
 单元测试
 
 ```bash
-go test ./app/... -count=1
+go test ./... | { grep -v 'no test files'; true; }
 ```
 
 单元测试并且显示测试覆盖率
 
 ```
-go test ./app/... -count=1 -cover -tags test -coverprofile=t.out
+go test ./... -count=1 -cover -tags test -coverprofile=t.out
 go tool cover -html=t.out
 ```
 
@@ -61,25 +67,6 @@ skip_migrate=2 go run cmd/jxc/main.go
 
 ```bash
 up_migrate=all dir_migrate=sql/migrations go run cmd/jxc/main.go
-```
-
-## 目录说明
-
-```text
-app // 程序源码文件夹
-cmd // 项目执行文件
-logs // 日志文件（gitignore忽略）
-models // 数据库表结构文件，自动生成
-migrations // 数据库迁移代码
-.air.toml // air 开发环境热更新配置
-.base.env // 环境参数配置
-.env  // 本地环境参数配置, 覆盖 .base.env 中的选项（gitignore忽略）
-database.json // sql-migrate 基本配置
-dbconfig.yml // sql-migrate cli 配置（gitignore忽略）
-go.mod
-go.sum
-README.md
-sqlc.yaml // sqlc/sqlm 配置
 ```
 
 ## 配置本地 .env
