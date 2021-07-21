@@ -6,8 +6,7 @@ import (
 )
 
 func SignInWithSession(body SignInWithSessionBody) (AccountRes, error) {
-	sessionCache := rds.New(SESSION_CACHE)
-	if !sessionCache.Is(body.AccountID, body.Session) {
+	if !rds.Is(SESSION_CACHE, body.AccountID, body.Session) {
 		return AccountRes{}, errox.Errorf("您的登入状态已过期，请重新登入")
 	}
 

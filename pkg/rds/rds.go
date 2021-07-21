@@ -41,17 +41,12 @@ func New(prefix string) Cache {
 	return Cache{prefix: prefix, redis: Client}
 }
 
-func Del(prefix string, key interface{}) {
-	cache := Cache{prefix: prefix, redis: Client}
-	cache.Del(key)
+func Key(prefix string, key interface{}) string {
+	return fmt.Sprintf("%v::%v", prefix, key)
 }
 
-func (c *Cache) Key(key interface{}) string {
-	return fmt.Sprintf("%v::%v", c.prefix, key)
-}
-
-func (c *Cache) Get(key interface{}, target interface{}) error {
-	data, err := c.redis.GetEx(context.Background(), c.Key(key), CacheTimeout).Bytes()
+func Get(prefix string, key interface{}, target interface{}) error {
+	data, err := Client.GetEx(context.Background(), Key(prefix, key), CacheTimeout).Bytes()
 	if err != nil {
 		return err
 	}
@@ -63,21 +58,21 @@ func (c *Cache) Get(key interface{}, target interface{}) error {
 	return nil
 }
 
-func (c *Cache) GetString(key interface{}) string {
-	data := c.redis.GetEx(context.Background(), c.Key(key), CacheTimeout).Val()
+func GetString(perfix string, key interface{}) string {
+	data := Client.GetEx(context.Background(), Key(perfix, key), CacheTimeout).Val()
 
 	return data
 }
 
-func (c *Cache) Set(key interface{}, target interface{}) error {
-	realKey := c.Key(key)
+func Set(perfix string, key interface{}, target interface{}) error {
+	realKey := Key(perfix, key)
 	switch v := target.(type) {
 	case string:
-		if err := c.redis.SetEX(context.Background(), realKey, v, CacheTimeout).Err(); err != nil {
+		if err := Client.SetEX(context.Background(), realKey, v, CacheTimeout).Err(); err != nil {
 			return err
 		}
 	case int:
-		if err := c.redis.SetEX(context.Background(), realKey, v, CacheTimeout).Err(); err != nil {
+		if err := Client.SetEX(context.Background(), realKey, v, CacheTimeout).Err(); err != nil {
 			return err
 		}
 	default:
@@ -85,7 +80,7 @@ func (c *Cache) Set(key interface{}, target interface{}) error {
 		if err != nil {
 			return err
 		}
-		if err := c.redis.SetEX(context.Background(), realKey, data, CacheTimeout).Err(); err != nil {
+		if err := Client.SetEX(context.Background(), realKey, data, CacheTimeout).Err(); err != nil {
 			return err
 		}
 	}
@@ -93,12 +88,12 @@ func (c *Cache) Set(key interface{}, target interface{}) error {
 	return nil
 }
 
-func (c *Cache) Del(key interface{}) {
-	c.redis.Del(context.Background(), c.Key(key))
+func Del(prefix string, key interface{}) {
+	Client.Del(context.Background(), Key(prefix, key))
 }
 
-func (c *Cache) Has(key interface{}) error {
-	res := c.redis.GetEx(context.Background(), c.Key(key), CacheTimeout)
+func Has(prefix string, key interface{}) error {
+	res := Client.GetEx(context.Background(), Key(prefix, key), CacheTimeout)
 	err := res.Err()
 	if err != nil {
 		return err
@@ -110,8 +105,8 @@ func (c *Cache) Has(key interface{}) error {
 	return nil
 }
 
-func (c *Cache) Is(key interface{}, val string) bool {
-	res := c.redis.GetEx(context.Background(), c.Key(key), CacheTimeout).Val()
+func Is(prefix string, key interface{}, val string) bool {
+	res := Client.GetEx(context.Background(), Key(prefix, key), CacheTimeout).Val()
 
 	return res == val
 }

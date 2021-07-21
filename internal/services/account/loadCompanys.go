@@ -1,6 +1,8 @@
 package account
 
 import (
+	"errors"
+
 	"github.com/ymzuiku/errox"
 	"github.com/ymzuiku/gewu_jxc/pkg/orm"
 	"github.com/ymzuiku/gewu_jxc/pkg/rds"
@@ -8,15 +10,16 @@ import (
 
 const COMPANYS = "companys"
 
+var errNeedAccountID = errors.New("请传入正确的ID")
+
 func LoadCompanys(accountID int32) (LoadCompanysRes, error) {
 	if accountID == 0 {
-		return LoadCompanysRes{}, errox.New("请传入正确的ID")
+		return LoadCompanysRes{}, errox.Wrap(errNeedAccountID)
 	}
-	cache := rds.New(COMPANYS)
 
 	companysRes := LoadCompanysRes{}
 
-	if err := cache.Get(accountID, &companysRes); err == nil {
+	if err := rds.Get(COMPANYS, accountID, &companysRes); err == nil {
 		return companysRes, nil
 	}
 
@@ -29,7 +32,7 @@ func LoadCompanys(accountID int32) (LoadCompanysRes, error) {
 		companysRes[v.ID] = v.Company
 	}
 
-	if err := cache.Set(accountID, companysRes); err != nil {
+	if err := rds.Set(COMPANYS, accountID, companysRes); err != nil {
 		return companysRes, nil
 	}
 

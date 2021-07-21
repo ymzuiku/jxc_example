@@ -11,9 +11,8 @@ const ACCOUNT_CACHE = "account"
 const SESSION_CACHE = "session"
 
 func LoadAccount(accountID int32) (AccountRes, error) {
-	cache := rds.New(ACCOUNT_CACHE)
 	var account AccountRes
-	if err := cache.Get(accountID, &account); err == nil {
+	if err := rds.Get(ACCOUNT_CACHE, accountID, &account); err == nil {
 		return account, errox.Wrap(err)
 	}
 
@@ -21,17 +20,12 @@ func LoadAccount(accountID int32) (AccountRes, error) {
 		return AccountRes{}, errox.Errorf("读取账户信息失败: %w\n", err)
 	}
 
-	sessionCache := rds.New(SESSION_CACHE)
-
 	session := uuid.NewString()
-	if err := sessionCache.Set(accountID, session); err != nil {
+	if err := rds.Set(SESSION_CACHE, accountID, session); err != nil {
 		return AccountRes{}, errox.Wrap(err)
 	}
 	account.Session = session
 
-	if err := cache.Set(accountID, account); err != nil {
-		return AccountRes{}, errox.Wrap(err)
-	}
 	return account, nil
 }
 

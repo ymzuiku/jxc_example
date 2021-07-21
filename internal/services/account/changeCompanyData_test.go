@@ -9,7 +9,9 @@ func TestChangeComapnyData(t *testing.T) {
 	t.Run("the boss change account people, company", func(t *testing.T) {
 
 	})
+	t.Run("the boss change account people, company", func(t *testing.T) {
 
+	})
 }
 
 func TestChangeComapnyDataVerify(t *testing.T) {

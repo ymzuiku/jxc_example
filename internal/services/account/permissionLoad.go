@@ -15,10 +15,9 @@ func PermissionLoad(employeeID int32) (models.Author, error) {
 	if employeeID == 0 {
 		return models.Author{}, errox.New("请传入正确的ID")
 	}
-	cache := rds.New(PERMISSION_CACHE)
 
 	var permission models.Author
-	if err := cache.Get(employeeID, &permission); err == nil {
+	if err := rds.Get(PERMISSION_CACHE, employeeID, &permission); err == nil {
 		return permission, err
 	}
 
@@ -32,7 +31,7 @@ func PermissionLoad(employeeID int32) (models.Author, error) {
 		return permission, errox.Wrap(err)
 	}
 
-	if err := cache.Set(employeeID, data); err != nil {
+	if err := rds.Set(PERMISSION_CACHE, employeeID, data); err != nil {
 		return permission, errox.Wrap(err)
 	}
 

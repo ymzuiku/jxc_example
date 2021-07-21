@@ -302,9 +302,8 @@ github.com/mattn/go-isatty v0.0.5/go.mod h1:Iq45c/XA43vh69/j3iqttzPXn0bhXyGjM0Hd
 github.com/mattn/go-isatty v0.0.7/go.mod h1:Iq45c/XA43vh69/j3iqttzPXn0bhXyGjM0Hdxcsrc5s=
 github.com/mattn/go-isatty v0.0.8/go.mod h1:Iq45c/XA43vh69/j3iqttzPXn0bhXyGjM0Hdxcsrc5s=
 github.com/mattn/go-isatty v0.0.9/go.mod h1:YNRxwqDuOph6SZLI9vUUz6OYw3QyUt7WiY2yME+cCiQ=
+github.com/mattn/go-isatty v0.0.12 h1:wuysRhFDzyxgEmMf5xjvJ2M9dZoWAXNNr5LSBS7uHXY=
 github.com/mattn/go-isatty v0.0.12/go.mod h1:cbi8OIDigv2wuxKPP5vlRcQ1OAZbq2CE4Kysco4FUpU=
-github.com/mattn/go-isatty v0.0.13 h1:qdl+GuBjcsKKDco5BsxPJlId98mSWNKqYA+Co0SC1yA=
-github.com/mattn/go-isatty v0.0.13/go.mod h1:cbi8OIDigv2wuxKPP5vlRcQ1OAZbq2CE4Kysco4FUpU=
 github.com/mattn/go-oci8 v0.1.1/go.mod h1:wjDx6Xm9q7dFtHJvIlrI99JytznLw5wQ4R+9mNXJwGI=
 github.com/mattn/go-runewidth v0.0.2/go.mod h1:LwmH8dsx7+W8Uxz3IHJYH5QSwggIsqBzpuz5H//U1FU=
 github.com/mattn/go-runewidth v0.0.9/go.mod h1:H031xJmbD/WCDINGzjvQ9THkh0rPKHF+m2gUSrubnMI=
@@ -462,9 +461,11 @@ github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q
 github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:aYKd//L2LvnjZzWKhF00oedf4jCCReLcmhLdhm1A27Q=
 github.com/ymzuiku/env_migrate v0.0.0-20210712095240-fe16c6ef3ee5 h1:CRTeg/hSmV5/Fm4eAe9ogvhdWkvlNuXBUo+QbJ3r/fM=
 github.com/ymzuiku/env_migrate v0.0.0-20210712095240-fe16c6ef3ee5/go.mod h1:S9Q+41E3/9pZT44mo+f0nyDVee7nfKaxZuzSMQp+Wtw=
+github.com/ymzuiku/errox v0.1.10 h1:LyiUqFpQI2ESKCa8nh/IR7wzTO9g+UbMr9dup/I0AQA=
+github.com/ymzuiku/errox v0.1.10/go.mod h1:jTBp4yKTfzv9XO3ObwBIm3oJxsOtDesRZsvmAVODJag=
 github.com/ymzuiku/so v0.0.0-20210717161045-90cec93685d5/go.mod h1:ObY83aSJjn9d6CKpw2R583U2JyHkxh945pMAIwC/pr8=
-github.com/ymzuiku/so v0.1.5 h1:VdVSHOTZ3tS3LtO9SE+t1Zy+CZJYxFbNIfMXTy8g4ZQ=
-github.com/ymzuiku/so v0.1.5/go.mod h1:ObY83aSJjn9d6CKpw2R583U2JyHkxh945pMAIwC/pr8=
+github.com/ymzuiku/so v0.1.6 h1:EEn0grM0ZCPkfNU9V7/yAYpAjL5lDSW22PnTqZ8QkLM=
+github.com/ymzuiku/so v0.1.6/go.mod h1:ObY83aSJjn9d6CKpw2R583U2JyHkxh945pMAIwC/pr8=
 github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/zenazn/goji v0.9.0/go.mod h1:7S9M489iMyHBNxwZnk9/EHS098H4/F6TATF2mIxtB1Q=
 github.com/ziutek/mymysql v1.5.4 h1:GB0qdRGsTwQSBVYuVShFBKaXSnSnYYC2d9knnE1LHFs=
