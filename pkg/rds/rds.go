@@ -58,21 +58,20 @@ func Get(prefix string, key interface{}, target interface{}) error {
 	return nil
 }
 
-func GetString(perfix string, key interface{}) string {
-	data := Client.GetEx(context.Background(), Key(perfix, key), CacheTimeout).Val()
+func GetString(prefix string, key interface{}) string {
+	data := Client.GetEx(context.Background(), Key(prefix, key), CacheTimeout).Val()
 
 	return data
 }
 
-func Set(perfix string, key interface{}, target interface{}) error {
-	realKey := Key(perfix, key)
+func Set(prefix string, key interface{}, target interface{}) error {
 	switch v := target.(type) {
 	case string:
-		if err := Client.SetEX(context.Background(), realKey, v, CacheTimeout).Err(); err != nil {
+		if err := Client.SetEX(context.Background(), Key(prefix, key), v, CacheTimeout).Err(); err != nil {
 			return err
 		}
 	case int:
-		if err := Client.SetEX(context.Background(), realKey, v, CacheTimeout).Err(); err != nil {
+		if err := Client.SetEX(context.Background(), Key(prefix, key), v, CacheTimeout).Err(); err != nil {
 			return err
 		}
 	default:
@@ -80,7 +79,7 @@ func Set(perfix string, key interface{}, target interface{}) error {
 		if err != nil {
 			return err
 		}
-		if err := Client.SetEX(context.Background(), realKey, data, CacheTimeout).Err(); err != nil {
+		if err := Client.SetEX(context.Background(), Key(prefix, key), data, CacheTimeout).Err(); err != nil {
 			return err
 		}
 	}

@@ -12,5 +12,5 @@ func ChangeComapnyData(employeeID int32) error {
 	if employeeID == 0 {
 		return errox.Wrap(errNeedEmployeeID)
 	}
-	return nil
+	return errors.New("dog")
 }

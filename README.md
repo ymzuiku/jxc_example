@@ -8,7 +8,42 @@
 
 代码规范: https://github.com/xxjwxc/uber_go_guide_cn
 
+## 配置本地 .env
+
+必须配置.env 才可以正常执行，以下是一个 .env 配置的例子
+
+```bash
+DEV=yes
+DB_CONNECT_URL="host=localhost port=5432 user=postgres password=qwe123jkl dbname=cat sslmode=disable TimeZone=Asia/Shanghai"
+maxOpenConns=30
+maxIdleConns=20
+maxLifetime=5
+migrations="migrations"
+redisAddr="localhost:6379"
+redisPassword="qwe123jkl"
+redisDB=0
+JWT="2uiwqtnvmj734n23fkodfl412fdsfsdf"
+JWTISS="jxc"
+SESSION="fjdklsa813490ujgkncxvm0p12jwfi1"
+SHA256_SALT="iureoiwjrnvmcnxlkjfkdj"
+```
+
+## make 命令
+
+若你本机安装了 make，可以执行以下命令:
+
+```bash
+$ make dev # 启动开发
+$ make test # 测试
+$ make cover # 测试并显示测试覆盖度
+$ make linux # 编译linux版本
+$ make up # sql-migrate up 所有
+$ make down # sql-migrate down 所有
+```
+
 ## 常用命令
+
+若没有安装 make，可以手动执行
 
 编译 linux
 
@@ -31,7 +66,7 @@ up_igrate=all air
 单元测试
 
 ```bash
-go test ./... | { grep -v 'no test files'; true; }
+go test ./...
 ```
 
 单元测试并且显示测试覆盖率
@@ -40,6 +75,8 @@ go test ./... | { grep -v 'no test files'; true; }
 go test ./... -count=1 -cover -tags test -coverprofile=t.out
 go tool cover -html=t.out
 ```
+
+要简化测试日志的方法是使用 github.com/ymzuiku/gotest 执行
 
 ## 迁移数据库
 
@@ -67,19 +104,6 @@ skip_migrate=2 go run cmd/jxc/main.go
 
 ```bash
 up_migrate=all dir_migrate=sql/migrations go run cmd/jxc/main.go
-```
-
-## 配置本地 .env
-
-默认情况工程读取 .base.env, 若要覆盖其中的选项，可以创建一个 .env 文件，在文件中写编写需要覆盖的属性
-
-以下是一个 .env 配置的例子
-
-```bash
-DEV=yes
-DB_CONNECT_URL="host=localhost port=5432 user=postgres password=qwe123jkl dbname=dog sslmode=disable TimeZone=Asia/Shanghai"
-redisAddr="localhost:6379"
-redisPassword="qwe123jkl"
 ```
 
 ## sqlm 编译表结构

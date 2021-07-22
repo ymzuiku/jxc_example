@@ -55,10 +55,6 @@ func envInit() {
 		}
 	}
 
-	if err := godotenv.Load(path.Join(RootDir, ".base.env")); err != nil {
-		log.Fatalln(err)
-	}
-
 	Jwt = []byte(os.Getenv("JWT"))
 	JwtIss = os.Getenv("JWTISS")
 	Session = os.Getenv("SESSION")

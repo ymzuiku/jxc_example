@@ -1,6 +1,7 @@
 package testh
 
 import (
+	"context"
 	"math/rand"
 	"sync"
 	"time"
@@ -25,4 +26,5 @@ func unitTest() {
 	env.Init()
 	orm.Init()
 	rds.Init()
+	rds.Client.FlushDB(context.Background())
 }

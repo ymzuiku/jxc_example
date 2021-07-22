@@ -12,7 +12,6 @@ func TestLoadPermission(t *testing.T) {
 		employeeID := mockLoadCompanysFirstEmployee(t, data.ID)
 		p, err := PermissionLoad(employeeID)
 		so.Nil(t, err)
-		// errox.Printf("====== %+v %v\n", p, p.Boss)
 		so.True(t, p.Boss)
 		so.True(t, p.CompanyRead)
 		so.True(t, p.EmployeeCreate)

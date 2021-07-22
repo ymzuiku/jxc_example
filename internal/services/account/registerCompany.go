@@ -31,7 +31,7 @@ func RegisterCompany(body RegisterCompanyBody) (AccountRes, error) {
 		}},
 	}
 
-	if res := orm.DB.Create(&input); orm.Error(res) != nil {
+	if res := orm.DB.Create(&input); orm.Ok(res) != nil {
 		return AccountRes{}, errox.Errorf("创建 account 失败: %w", res.Error)
 	}
 

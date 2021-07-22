@@ -40,12 +40,12 @@ func Remove(body RemoveBody) error {
 		return errox.Errorf("删除账户中，删除 Employee 失败: %w\n", err)
 	}
 
-	if res := tx.Table("company").Where("id in ?", companyIDs).Delete(nil); orm.Error(res) != nil {
+	if res := tx.Table("company").Where("id in ?", companyIDs).Delete(nil); orm.Ok(res) != nil {
 		tx.Rollback()
 		return errox.Errorf("删除账户中，删除 Company 失败: %w\n", res.Error)
 	}
 
-	if res := tx.Table("employee_author").Where("employee_id in ?", employeeIDs).Delete(nil); orm.Error(res) != nil {
+	if res := tx.Table("employee_author").Where("employee_id in ?", employeeIDs).Delete(nil); orm.Ok(res) != nil {
 		tx.Rollback()
 		return errox.Errorf("删除账户中，删除 Employee_author 失败: %w\n", res.Error)
 	}

@@ -13,10 +13,10 @@ import (
 var errChangeAccountDataFail = errors.New("修改账号信息失败")
 
 func ChangeAccountData(body ChangeAccountDataBody) error {
-	if res := orm.DB.Where("id = ?", body.AccountID).Updates(&models.Account{
+	if err := orm.Ok(orm.DB.Where("id = ?", body.AccountID).Updates(&models.Account{
 		Name:  body.Name,
 		Email: body.Email,
-	}); orm.Error(res) != nil {
+	})); err != nil {
 		return errox.Wrap(errChangeAccountDataFail)
 	}
 	return nil

@@ -21,15 +21,6 @@ var SqlDB *sql.DB
 
 var DB *gorm.DB
 
-func Error(tx *gorm.DB) error {
-	if tx.Error != nil {
-		return tx.Error
-	} else if tx.RowsAffected == 0 {
-		return errors.New("Db RowsAffected is zero")
-	}
-	return nil
-}
-
 func gormLog() logger.Interface {
 	isDev := env.IsDev
 
@@ -92,4 +83,16 @@ func Init() {
 	SqlDB.SetMaxOpenConns(maxOpenConns)
 	SqlDB.SetMaxIdleConns(maxIdleConns)
 	SqlDB.SetConnMaxLifetime(time.Duration(maxLifetime) * time.Minute)
+}
+
+var ErrRowsAffected = errors.New("Db RowsAffected is zero")
+
+// 若 gorm.DB 有错误，或 RowsAffected == 0, 都会返回错误
+func Ok(tx *gorm.DB) error {
+	if tx.Error != nil {
+		return tx.Error
+	} else if tx.RowsAffected == 0 {
+		return ErrRowsAffected
+	}
+	return nil
 }

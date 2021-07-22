@@ -13,16 +13,18 @@ import (
 )
 
 func TestChangeAccountData(t *testing.T) {
+
 	t.Run("change account name, email", func(t *testing.T) {
+		account := mockRegisterCompany(t)
 		err := ChangeAccountData(ChangeAccountDataBody{
-			AccountID: 1,
+			AccountID: account.ID,
 			Name:      "dog2",
 			Email:     sql.NullString{String: "cat2", Valid: true},
 		})
 		so.Nil(t, err)
 
 		var data models.Account
-		err = orm.DB.Where("id = ?", 1).Take(&data).Error
+		err = orm.DB.Where("id = ?", account.ID).Take(&data).Error
 		so.Nil(t, err)
 		so.Equal(t, data.Name, "dog2")
 		val, err := data.Email.Value()
